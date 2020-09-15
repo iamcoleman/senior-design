@@ -10,4 +10,4 @@ Sentiment Analysis Tool
 TBD
 
 # Project Topic Area
-Sentiment analysis tracking on social media
+A web-based sentiment analysis discovery tool
