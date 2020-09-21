@@ -1,0 +1,3 @@
+- As a casual user, I want to search for popular words and phrases, so I can get a better idea of what's happening on the internet.
+- As an investment banker, I want to search for stock tickers and related keywords, so I can understand the perception the public has about certain stocks.
+- As a college student, I want to search for keywords related to 
