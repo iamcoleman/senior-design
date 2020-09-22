@@ -1,5 +1,5 @@
 - As a casual user, I want to search for popular words and phrases, so I can get a better idea of what's happening on the internet today.
 - As an investment banker, I want to search for stock tickers and related keywords, so I can understand the perception the public has about certain stocks.
-- As a college student, I want to search for keywords related to 
+- As a consumer, I want to search for keywords related to new media (books, movies, video games, etc.), so I can assess their quality to make purchasing decisions.
 - As an Influencer/Social Media persona, I want to discover the current most controversial statements on the internet in order to create content that attracts viewers and drives engagement.
 - As a marketer, I want to discover if the ad campaign our company just launched had any effect on the sentiment around a new product that we recently released.
