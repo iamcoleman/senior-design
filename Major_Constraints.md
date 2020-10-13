@@ -1,0 +1,15 @@
+# Major Constraints
+- Economic Costs
+  - We will be able to develop the application locally; however, once we go to deploy the application, we will be using AWS. Because our application is new and initially small in size, we will be using relatively little resources in production. We estimate our AWS costs to be around $200. 
+- Time
+  - Perfecting the code to perform sentiment analysis, come up with statistically verifiable trends, and cache relevant data could be an unending task. Since we only have a few months to work on this, we will need to prioritize having a working solution to all pieces, rather than having the perfect solution to any one piece.
+- Professional/Technical
+  - This project requires experience with Natural Language Processing, Web Servers, Database Architecture and Front-End development in order for it to be executed in the best possible way. Our group has a good understanding of some of these areas, but it is important that we quickly gather knowledge in the NLP space as well as learning how to best implement our web server. We will be working closely with our advisor Dr. Minai in order to better understand NLP and how to use it in our project.
+- Ethical and Legal
+  - We will need to prepare for companies and famous people arguing that we are misrepresenting how the public views them. We will need to ensure that we post whatever legal disclaimers are necessary regarding potential statistical or classification errors. We will also need to ensure that the platform cannot be used to look up sentiment regarding minors or people who are not public figures. When necessary, we must also cite any API’s that we leverage to collect textual data.
+- Security
+  - We intend to monetize the API’s, so we need to ensure that malicious actors are unable to circumvent payment. We will also need to protect any personal or financial information we store about our users.
+- Social
+  - This project is designed to be used by anyone who is interested in trends across social media such as marketing firms and other interested parties. This will benefit society by increasing the knowledge base of how people perceive different topics.
+- Diversity and Cultural
+  - Making this project accessible and useful to people from multiple cultures means supporting multiple languages, both in terms of the user interface and the sentiment analysis engine. We may not be able to implement sentiment analysis for foreign languages before the end of the project, but this would be a great stretch goal to expand our audience. It may also be helpful to allow users to break down sentiment statistics by language and location in order to assess sentiment across cultures.
