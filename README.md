@@ -7,3 +7,7 @@
 
 ### Faculty Advisor
 - Dr. Ali Minai | ali.minai@uc.edu
+
+---
+
+#### Please visit the [repository wiki](https://github.com/iamcoleman/senior-design/wiki) to learn more about our project!
