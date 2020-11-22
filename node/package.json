@@ -1,0 +1,22 @@
+{
+  "name": "sentiment-analysis-tool",
+  "version": "0.0.1",
+  "description": "Routing and aggregation server for Sentiment Analysis Tool",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/iamcoleman/senior-design.git"
+  },
+  "author": "Tim McCabe",
+  "bugs": {
+    "url": "https://github.com/iamcoleman/senior-design/issues"
+  },
+  "homepage": "https://github.com/iamcoleman/senior-design#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "node-fetch": "^2.6.1"
+  }
+}
