@@ -6,7 +6,7 @@ Make a copy of `config.template.json` called `config.json` and fill in the API k
 
 ## Usage
 
-Right now, making a get request to `/:query` will return hashtags associated with the text you entered. For instance, this request:
+Right now, making a get request to `/:query` will return hashtags and subreddits associated with the text you entered. For instance, this request:
 
     GET http://localhost:3000/politics
 
@@ -21,5 +21,16 @@ will retrieve a response like this:
             "NYT",
             "FoxNews",
             "Iran"
+        ],
+        "subreddits": [
+            "gifs",
+            "worldnews",
+            "politics",
+            "Documentaries",
+            "MurderedByWords",
+            "TrueOffMyChest",
+            "facepalm",
+            "LifeProTips",
+            "PoliticalCompassMemes"
         ]
     }

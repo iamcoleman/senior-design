@@ -1,36 +1,33 @@
 const express = require('express');
-const fetch = require('node-fetch');
 
 const config = require('../config');
+const twitter = require('./twitter');
+const reddit = require('./reddit');
 
 const app = express();
 const port = config.port;
-const twitterBearerToken = config.twitter.bearerToken;
 
 function arrayWithoutDuplicates(inputArray) {
     return Array.from(new Set(inputArray));
 }
 
-app.get('/:query', async (req, res) => {
-    const url = new URL('https://api.twitter.com/1.1/search/tweets.json');
-    url.searchParams.append('q', req.params.query);
-    url.searchParams.append('count', 100);
-    url.searchParams.append('lang', 'en');
-
-    const twitterData = await fetch(url, {
-        headers: {
-            Authorization: 'Bearer ' + twitterBearerToken
-        }
-    });
-    const twitterJson = await twitterData.json();
-    const tags = twitterJson.statuses
+function extractTwitterTags(twitterPosts) {
+    return arrayWithoutDuplicates(twitterPosts.statuses
         .map(status => status.entities.hashtags)
         .reduce((a, b) => a.concat(b), [])
-        .map(hashtag => hashtag.text);
+        .map(hashtag => hashtag.text));
+}
 
-    res.send({
-        tags: arrayWithoutDuplicates(tags)
-    });
+function extractSubreddits(redditPosts) {
+    return arrayWithoutDuplicates(redditPosts.data.children
+        .map(post => post.data.subreddit));
+}
+
+app.get('/:query', async (req, res) => {
+    const twitterPromise = twitter.search(req.params.query).then(extractTwitterTags);
+    const redditPromise = reddit.search(req.params.query).then(extractSubreddits);
+    const [tags, subreddits] = await Promise.all([twitterPromise, redditPromise]);
+    res.send({ tags, subreddits });
 });
 
 app.listen(port, () => {
