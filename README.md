@@ -10,4 +10,4 @@
 
 ---
 
-#### Please visit the [repository wiki](https://github.com/iamcoleman/senior-design/wiki) to learn more about our project!
+### Please visit the [repository wiki](https://github.com/iamcoleman/senior-design/wiki) to learn more about our project!
