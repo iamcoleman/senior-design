@@ -14,3 +14,7 @@ Make sure you have initialized the virtual environment `venv` for the app under 
     - on Windows use: `.\env\Scripts\activate`
 4. Install packages from the `requirements.txt` file
     - use: `pip install -r requirements.txt`
+    
+### .env file
+
+A `.env` file is required in `senior-design/code/engine-api`. Contact Coleman to get the required variables for the `.env` file.
