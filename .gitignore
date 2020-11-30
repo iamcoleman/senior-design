@@ -1,1 +1,13 @@
+# JetBrains IDE
 /.idea
+
+# PyCache
+__pycache__
+
+
+####  ENGINE-API  ####
+
+# virtual environment
+/code/engine-api/venv
+# .env file
+/code/engine-api/.env
