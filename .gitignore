@@ -4,10 +4,8 @@
 # PyCache
 __pycache__
 
+# Python virtual environment
+/code/venv
 
-####  ENGINE-API  ####
-
-# virtual environment
-/code/engine-api/venv
-# .env file
+# .env files
 /code/engine-api/.env
