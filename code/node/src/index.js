@@ -23,7 +23,63 @@ function extractSubreddits(redditPosts) {
         .map(post => post.data.subreddit));
 }
 
-app.get('/:query', async (req, res) => {
+// This is async because it will be an API call
+async function analyzeSentiment(query) {
+    return Math.floor(Math.random() * 101);
+}
+
+async function scoreDate(query, date, dayAfter) {
+    const options = {
+        count: 10
+    };
+    if(dayAfter !== undefined) {
+        options.until = dayAfter;
+    }
+    const twitterPosts = await twitter.search(query, options);
+    const scorePromises = [];
+    for(let status of twitterPosts.statuses) {
+        const tweetDate = new Date(status.created_at).toISOString().substring(0, 10);
+        if(tweetDate !== date) {
+            break;
+        }
+        scorePromises.push(analyzeSentiment(status.text));
+    }
+    if(scorePromises.length === 0) {
+        return 'no data';
+    }
+    const scores = await Promise.all(scorePromises);
+    return Math.round(scores.reduce((a, b) => a + b) / scores.length);
+}
+
+app.get('/sentiment/:query', async (req, res) => {
+    const date = new Date();
+    let dateString = date.toISOString().substring(0, 10);
+    const dates = [dateString];
+    const sentimentByDate = {}
+    sentimentByDate[dateString] = [];
+    for(let i = 0; i < 6; i++) {
+        date.setDate(date.getDate() - 1);
+        dateString = date.toISOString().substring(0, 10);
+        dates.push(dateString);
+        sentimentByDate[dateString] = [];
+    }
+
+    const scorePromises = [scoreDate(req.params.query, dates[0])];
+    for(let i = 1; i < 7; i++) {
+        scorePromises.push(scoreDate(req.params.query, dates[i], dates[i - 1]));
+    }
+
+    const response = [];
+    for(let i = 0; i < 7; i++) {
+        response.push({
+            date: dates[i],
+            score: await scorePromises[i]
+        });
+    }
+    res.send(response);
+});
+
+app.get('/tags/:query', async (req, res) => {
     const twitterPromise = twitter.search(req.params.query).then(extractTwitterTags);
     const redditPromise = reddit.search(req.params.query).then(extractSubreddits);
     const [tags, subreddits] = await Promise.all([twitterPromise, redditPromise]);
