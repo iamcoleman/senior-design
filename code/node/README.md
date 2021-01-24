@@ -39,7 +39,7 @@ Gather hashtags and subreddits associated with a query.
 
 ### Sentiment
 
-Find the sentiment associated with a query over time. Scores range from 0 to 100.
+Find the sentiment associated with a query over time. Scores range from 0 to 100. Dates are all GMT.
 
     GET /sentiment/query/:query
 

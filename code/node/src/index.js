@@ -31,13 +31,13 @@ async function analyzeSentiment(query) {
 app.get('/sentiment/:query', async (req, res) => {
     const twitterPosts = await twitter.search(req.params.query);
     const date = new Date();
-    let dateString = date.toISOString.substring(0, 10);
+    let dateString = date.toISOString().substring(0, 10);
     const dates = [dateString];
     const sentimentByDate = {}
     sentimentByDate[dateString] = [];
     for(let i = 0; i < 6; i++) {
         date.setDate(date.getDate() - 1);
-        dateString = date.toISOString.substring(0, 10);
+        dateString = date.toISOString().substring(0, 10);
         dates.push(dateString);
         sentimentByDate[dateString] = [];
     }
