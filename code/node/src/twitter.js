@@ -9,11 +9,16 @@ const requestParams = {
     }
 };
 
-async function search(query) {
+async function search(query, options = {}) {
     const url = new URL('https://api.twitter.com/1.1/search/tweets.json');
     url.searchParams.append('q', query);
-    url.searchParams.append('count', 100);
     url.searchParams.append('lang', 'en');
+    for(let key in options) {
+        url.searchParams.append(key, options[key]);
+    }
+    if(options.count === undefined) {
+        url.searchParams.append('count', 100);
+    }
 
     const data = await fetch(url, requestParams);
     return data.json();

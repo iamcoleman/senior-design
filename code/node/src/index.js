@@ -28,8 +28,30 @@ async function analyzeSentiment(query) {
     return Math.floor(Math.random() * 101);
 }
 
+async function scoreDate(query, date, dayAfter) {
+    const options = {
+        count: 10
+    };
+    if(dayAfter !== undefined) {
+        options.until = dayAfter;
+    }
+    const twitterPosts = await twitter.search(query, options);
+    const scorePromises = [];
+    for(let status of twitterPosts.statuses) {
+        const tweetDate = new Date(status.created_at).toISOString().substring(0, 10);
+        if(tweetDate !== date) {
+            break;
+        }
+        scorePromises.push(analyzeSentiment(status.text));
+    }
+    if(scorePromises.length === 0) {
+        return 'no data';
+    }
+    const scores = await Promise.all(scorePromises);
+    return Math.round(scores.reduce((a, b) => a + b) / scores.length);
+}
+
 app.get('/sentiment/:query', async (req, res) => {
-    const twitterPosts = await twitter.search(req.params.query);
     const date = new Date();
     let dateString = date.toISOString().substring(0, 10);
     const dates = [dateString];
@@ -41,24 +63,17 @@ app.get('/sentiment/:query', async (req, res) => {
         dates.push(dateString);
         sentimentByDate[dateString] = [];
     }
-    for(let status of twitterPosts.statuses) {
-        const tweetDate = new Date(status.created_at).toISOString().substring(0, 10);
-        sentimentByDate[tweetDate].push(analyzeSentiment(status.text));
+
+    const scorePromises = [scoreDate(req.params.query, dates[0])];
+    for(let i = 1; i < 7; i++) {
+        scorePromises.push(scoreDate(req.params.query, dates[i], dates[i - 1]));
     }
-    const scores = await Promise.all(dates.map(async (date) => {
-        const values = await Promise.all(sentimentByDate[date]);
-        if(values.length === 0) {
-            // TODO: ensure this doesn't happen
-            return 'no data';
-        } else {
-            return Math.round(values.reduce((a, b) => a + b) / 100);
-        }
-    }));
+
     const response = [];
     for(let i = 0; i < 7; i++) {
         response.push({
             date: dates[i],
-            score: scores[i]
+            score: await scorePromises[i]
         });
     }
     res.send(response);
