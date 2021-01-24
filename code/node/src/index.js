@@ -53,20 +53,21 @@ async function scoreDate(query, date, dayAfter) {
 
 app.get('/sentiment/query/:query', async (req, res) => {
     const date = new Date();
+    date.setDate(date.getDate() - 6);
     let dateString = date.toISOString().substring(0, 10);
     const dates = [dateString];
     const sentimentByDate = {}
     sentimentByDate[dateString] = [];
     for(let i = 0; i < 6; i++) {
-        date.setDate(date.getDate() - 1);
+        date.setDate(date.getDate() + 1);
         dateString = date.toISOString().substring(0, 10);
         dates.push(dateString);
         sentimentByDate[dateString] = [];
     }
 
-    const scorePromises = [scoreDate(req.params.query, dates[0])];
-    for(let i = 1; i < 7; i++) {
-        scorePromises.push(scoreDate(req.params.query, dates[i], dates[i - 1]));
+    const scorePromises = [];
+    for(let i = 0; i < 7; i++) {
+        scorePromises.push(scoreDate(req.params.query, dates[i], dates[i + 1]));
     }
 
     const response = [];
