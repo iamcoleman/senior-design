@@ -51,7 +51,7 @@ async function scoreDate(query, date, dayAfter) {
     return Math.round(scores.reduce((a, b) => a + b) / scores.length);
 }
 
-app.get('/sentiment/:query', async (req, res) => {
+app.get('/sentiment/query/:query', async (req, res) => {
     const date = new Date();
     let dateString = date.toISOString().substring(0, 10);
     const dates = [dateString];
