@@ -6,11 +6,13 @@ Make a copy of `config.template.json` called `config.json` and fill in the API k
 
 ## Usage
 
-Right now, making a get request to `/:query` will return hashtags and subreddits associated with the text you entered. For instance, this request:
+### Tags
 
-    GET http://localhost:3000/politics
+Gather hashtags and subreddits associated with a query.
 
-will retrieve a response like this:
+    GET /tags/:query
+
+**Example response**:
 
     {
         "tags": [
@@ -34,3 +36,27 @@ will retrieve a response like this:
             "PoliticalCompassMemes"
         ]
     }
+
+### Sentiment
+
+Find the sentiment associated with a query over time. Scores range from 0 to 100.
+
+    GET /sentiment/query/:query
+
+**Example response**:
+
+    [
+        {
+            "date": '2020-01-24',
+            "score": 68
+        },
+        {
+            "date": '2020-01-23',
+            "score": 65
+        },
+        ...,
+        {
+            "date": '2020-01-18',
+            "score": 62
+        }
+    ]

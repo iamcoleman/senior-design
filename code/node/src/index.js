@@ -23,7 +23,48 @@ function extractSubreddits(redditPosts) {
         .map(post => post.data.subreddit));
 }
 
-app.get('/:query', async (req, res) => {
+// This is async because it will be an API call
+async function analyzeSentiment(query) {
+    return Math.floor(Math.random() * 101);
+}
+
+app.get('/sentiment/:query', async (req, res) => {
+    const twitterPosts = await twitter.search(req.params.query);
+    const date = new Date();
+    let dateString = date.toISOString.substring(0, 10);
+    const dates = [dateString];
+    const sentimentByDate = {}
+    sentimentByDate[dateString] = [];
+    for(let i = 0; i < 6; i++) {
+        date.setDate(date.getDate() - 1);
+        dateString = date.toISOString.substring(0, 10);
+        dates.push(dateString);
+        sentimentByDate[dateString] = [];
+    }
+    for(let status of twitterPosts.statuses) {
+        const tweetDate = new Date(status.created_at).toISOString().substring(0, 10);
+        sentimentByDate[tweetDate].push(analyzeSentiment(status.text));
+    }
+    const scores = await Promise.all(dates.map(async (date) => {
+        const values = await Promise.all(sentimentByDate[date]);
+        if(values.length === 0) {
+            // TODO: ensure this doesn't happen
+            return 'no data';
+        } else {
+            return Math.round(values.reduce((a, b) => a + b) / 100);
+        }
+    }));
+    const response = [];
+    for(let i = 0; i < 7; i++) {
+        response.push({
+            date: dates[i],
+            score: scores[i]
+        });
+    }
+    res.send(response);
+});
+
+app.get('/tags/:query', async (req, res) => {
     const twitterPromise = twitter.search(req.params.query).then(extractTwitterTags);
     const redditPromise = reddit.search(req.params.query).then(extractSubreddits);
     const [tags, subreddits] = await Promise.all([twitterPromise, redditPromise]);
