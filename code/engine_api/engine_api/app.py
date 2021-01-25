@@ -17,6 +17,9 @@ from engine_api.extensions import (
     migrate,
 )
 
+# import the models for Flask-Migrate
+from engine_api.engine.models import AnalysisRequest
+
 
 def create_app(config_object="engine_api.settings"):
     """Create application factory, as explained here: http://flask.pocoo.org/docs/patterns/appfactories/.
