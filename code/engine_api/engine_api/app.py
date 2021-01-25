@@ -17,9 +17,6 @@ from engine_api.extensions import (
     migrate,
 )
 
-# import the models for Flask-Migrate
-from engine_api.engine.models import AnalysisRequest
-
 
 def create_app(config_object="engine_api.settings"):
     """Create application factory, as explained here: http://flask.pocoo.org/docs/patterns/appfactories/.
@@ -77,7 +74,7 @@ def register_shellcontext(app):
 
     def shell_context():
         """Shell context objects."""
-        return {"db": db, "User": user.models.User}
+        return {"db": db, "User": user.models.User, "AnalysisRequest": engine.models.AnalysisRequest}
 
     app.shell_context_processor(shell_context)
 
