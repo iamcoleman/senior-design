@@ -1,4 +1,5 @@
 const express = require('express');
+const Sentiment = require('sentiment');
 
 const config = require('../config');
 const twitter = require('./twitter');
@@ -6,6 +7,8 @@ const reddit = require('./reddit');
 
 const app = express();
 const port = config.port;
+
+const sentiment = new Sentiment();
 
 function arrayWithoutDuplicates(inputArray) {
     return Array.from(new Set(inputArray));
@@ -25,7 +28,10 @@ function extractSubreddits(redditPosts) {
 
 // This is async because it will be an API call
 async function analyzeSentiment(query) {
-    return Math.floor(Math.random() * 101);
+    const rawScore = sentiment.analyze(query).comparative / 5;
+    // Amplifying scores, squishing the extremes - without this, most scores fall between 48 and 52
+    const adjustedScore = Math.sign(rawScore) * Math.cos(Math.asin(Math.cos(Math.asin(Math.abs(rawScore) - 1)) - 1));
+    return adjustedScore * 50 + 50;
 }
 
 async function scoreDate(query, date, dayAfter) {
