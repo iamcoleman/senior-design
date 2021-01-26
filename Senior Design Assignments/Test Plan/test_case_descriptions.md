@@ -202,3 +202,16 @@ Our approach to testing for this project will encompass all parts of the applica
 -----
 
 ## Test Case Matrix
+
+| Test Case | Normal/Abnormal | Blackbox/Whitebox | Functional/Performance | Unit/Integration |
+|-----------|-----------------|-------------------|------------------------|------------------|
+|<b>TC 1</b>| Normal| Whitebox|Functional|Integration|
+|<b>TC 2</b>| Normal| Whitebox|Functional|Integration|
+|<b>TC 3</b>| Normal| Whitebox|Functional|Integration|
+|<b>TC 4</b>| Normal| Whitebox|Functional|Integration|
+|<b>TC 5</b>| Normal| Whitebox|Performance|Integration|
+|<b>TC 6</b>| Normal| Whitebox|Performance|Integration|
+|<b>TC 7</b>| Normal| Blackbox|Functional|Integration|
+|<b>TC 8</b>| Normal| Whitebox|Functional|Unit|
+|<b>TC 9</b>| Normal| Whitebox|Performance|Unit|
+|<b>TC 10</b>| Normal| Blackbox|Functional|Unit|
