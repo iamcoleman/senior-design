@@ -4,13 +4,15 @@
 
 Make a copy of `config.template.json` called `config.json` and fill in the API keys. Then run `npm install` to install dependencies and `npm start` to run the server.
 
+To run with a production build of the front end, run `npm run build` in `code/site` and then copy the contents of `code/site/build` to `code/node/public`.
+
 ## Usage
 
 ### Tags
 
 Gather hashtags and subreddits associated with a query.
 
-    GET /tags/:query
+    GET /api/tags/:query
 
 **Example response**:
 
@@ -41,7 +43,7 @@ Gather hashtags and subreddits associated with a query.
 
 Find the sentiment associated with a query over time. Scores range from 0 to 100. Dates are all GMT.
 
-    GET /sentiment/query/:query
+    GET /api/sentiment/query/:query
 
 **Example response**:
 

@@ -7,6 +7,8 @@ const reddit = require('./reddit');
 const app = express();
 const port = config.port;
 
+app.use(express.static('public'))
+
 function arrayWithoutDuplicates(inputArray) {
     return Array.from(new Set(inputArray));
 }
@@ -101,7 +103,7 @@ async function scoreWeekReddit(query, dates) {
     return scores;
 }
 
-app.get('/sentiment/query/:query', async (req, res) => {
+app.get('/api/sentiment/query/:query', async (req, res) => {
     const { query } = req.params;
     const date = new Date();
     date.setDate(date.getDate() - 6);
@@ -121,7 +123,7 @@ app.get('/sentiment/query/:query', async (req, res) => {
     res.send(response);
 });
 
-app.get('/tags/:query', async (req, res) => {
+app.get('/api/tags/:query', async (req, res) => {
     const twitterPromise = twitter.search(req.params.query).then(extractTwitterTags);
     const redditPromise = reddit.search(req.params.query).then(extractSubreddits);
     const [tags, subreddits] = await Promise.all([twitterPromise, redditPromise]);

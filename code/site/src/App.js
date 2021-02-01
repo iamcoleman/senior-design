@@ -12,7 +12,7 @@ function App() {
     e.preventDefault();
     setSearched(query);
     setLoading(true);
-    setData(await (await fetch(`/sentiment/query/${encodeURIComponent(query)}`)).json());
+    setData(await (await fetch(`/api/sentiment/query/${encodeURIComponent(query)}`)).json());
     setLoading(false);
   }
 
