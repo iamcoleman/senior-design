@@ -26,11 +26,17 @@ function App() {
       {data !== null &&
         <div className="chart">
           <Line data={{
-            labels: data.map(day => day.date),
+            labels: data.twitter.map(day => day.date),
             datasets: [{
+              label: 'Twitter',
               backgroundColor: 'rgba(75,162,162,0.1)',
               borderColor: 'rgba(75,162,162,1)',
-              data: data.map(day => day.score)
+              data: data.twitter.map(day => day.score)
+            }, {
+              label: 'Reddit',
+              backgroundColor: 'rgba(190,75,75,0.1)',
+              borderColor: 'rgba(190,75,75,1)',
+              data: data.reddit.map(day => day.score)
             }]
           }}
           width={1000}
@@ -40,9 +46,6 @@ function App() {
               display: true,
               text: `Sentiment for "${searched}"`,
               fontSize: 20
-            },
-            legend: {
-              display: false
             },
             elements: {
               line: {

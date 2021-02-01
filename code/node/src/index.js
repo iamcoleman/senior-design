@@ -34,7 +34,7 @@ async function analyzeSentiment(query) {
     return adjustedScore * 50 + 50;
 }
 
-async function scoreDate(query, date, dayAfter) {
+async function scoreDateTwitter(query, date, dayAfter) {
     const options = {
         count: 10
     };
@@ -57,32 +57,73 @@ async function scoreDate(query, date, dayAfter) {
     return Math.round(scores.reduce((a, b) => a + b) / scores.length);
 }
 
-app.get('/sentiment/query/:query', async (req, res) => {
-    const date = new Date();
-    date.setDate(date.getDate() - 6);
-    let dateString = date.toISOString().substring(0, 10);
-    const dates = [dateString];
-    const sentimentByDate = {}
-    sentimentByDate[dateString] = [];
-    for(let i = 0; i < 6; i++) {
-        date.setDate(date.getDate() + 1);
-        dateString = date.toISOString().substring(0, 10);
-        dates.push(dateString);
-        sentimentByDate[dateString] = [];
-    }
-
+async function scoreWeekTwitter(query, dates) {
     const scorePromises = [];
     for(let i = 0; i < 7; i++) {
-        scorePromises.push(scoreDate(req.params.query, dates[i], dates[i + 1]));
+        scorePromises.push(scoreDateTwitter(query, dates[i], dates[i + 1]));
     }
-
-    const response = [];
+    const scores = [];
     for(let i = 0; i < 7; i++) {
-        response.push({
+        scores.push({
             date: dates[i],
             score: await scorePromises[i]
         });
     }
+    return scores;
+}
+
+async function scoreWeekReddit(query, dates) {
+    const searchPromise = reddit.search(query, {
+        limit: 70,
+        t: 'week'
+    });
+    const scoresByDate = {};
+    for(const date of dates) {
+        scoresByDate[date] = [];
+    }
+    const redditPosts = await searchPromise;
+    for(const post of redditPosts.data.children) {
+        const date = new Date(post.data.created * 1000).toISOString().substring(0, 10);
+        if(scoresByDate[date] !== undefined) {
+            scoresByDate[date].push(analyzeSentiment(post.data.selftext));
+        }
+    }
+    const scores = [];
+    for(const date of dates) {
+        const scorePromises = scoresByDate[date];
+        if(scorePromises.length === 0) {
+            scores.push({
+                date: date,
+                score: 'no data'
+            });
+        } else {
+            const dateScores = await Promise.all(scorePromises);
+            scores.push({
+                date: date,
+                score: Math.round(dateScores.reduce((a, b) => a + b) / dateScores.length)
+            });
+        }
+    }
+    return scores;
+}
+
+app.get('/sentiment/query/:query', async (req, res) => {
+    const { query } = req.params;
+    const date = new Date();
+    date.setDate(date.getDate() - 6);
+    const dates = [date.toISOString().substring(0, 10)];
+    for(let i = 0; i < 6; i++) {
+        date.setDate(date.getDate() + 1);
+        dates.push(date.toISOString().substring(0, 10));
+    }
+
+    const twitterPromise = scoreWeekTwitter(query, dates);
+    const redditPromise = scoreWeekReddit(query, dates);
+
+    const response = {
+        twitter: await twitterPromise,
+        reddit: await redditPromise
+    };
     res.send(response);
 });
 

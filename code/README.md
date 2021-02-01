@@ -1,12 +1,14 @@
 # All the code for the Sentiment Analysis Tool
 
-## Three sub-folders
+## Four sub-folders
 1. **engine-api**
     - holds the code for the Python Flask API that allows the Node.js server and the Python Sentiment Analysis Engine to communicate.
 2. **node**
-    - holds the code for the Node.js server and the React site
+    - holds the code for the Node.js server
 3. **sentiment-analysis**
     - holds the code for the Python Sentiment Analysis Engine
+4. **site**
+    - holds the code for the React site
     
 ## Code Setup
 
@@ -19,6 +21,6 @@ Make sure you have initialized the virtual environment `venv` for the applicatio
     - on Windows use: `py -m venv venv`
 3. Activate the virtual environment
     - on macOS and Linux use: `source venv/bin/activate`
-    - on Windows use: `.\env\Scripts\activate`
+    - on Windows use: `.\venv\Scripts\activate`
 4. Install packages from the `requirements.txt` file in `senior-design/code/`
     - use: `pip install -r requirements.txt`

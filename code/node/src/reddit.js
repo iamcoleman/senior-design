@@ -19,7 +19,7 @@ const requestParams = {
 
 let tokenExpirationTime;
 
-async function search(query) {
+async function search(query, options) {
     if(!tokenExpirationTime || tokenExpirationTime < process.uptime()) {
         const authResponse = await fetch('https://www.reddit.com/api/v1/access_token', authRequestParams);
         const credentials = await authResponse.json();
@@ -28,8 +28,13 @@ async function search(query) {
     }
 
     const url = new URL('https://oauth.reddit.com/search/.json');
-    url.searchParams.append('q', query);
-    url.searchParams.append('limit', 10);
+    url.searchParams.append('q', `self:yes ${query}`);
+    for(let key in options) {
+        url.searchParams.append(key, options[key]);
+    }
+    if(options.limit === undefined) {
+        url.searchParams.append('limit', 100);
+    }
 
     const data = await fetch(url, requestParams);
     return data.json();
