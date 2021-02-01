@@ -47,18 +47,34 @@ Find the sentiment associated with a query over time. Scores range from 0 to 100
 
 **Example response**:
 
-    [
-        {
-            "date": '2020-01-24',
-            "score": 68
-        },
-        {
-            "date": '2020-01-23',
-            "score": 65
-        },
-        ...,
-        {
-            "date": '2020-01-18',
-            "score": 62
-        }
-    ]
+    {
+        "twitter": [
+            {
+                "date": '2020-01-24',
+                "score": 68
+            },
+            {
+                "date": '2020-01-23',
+                "score": 65
+            },
+            ...,
+            {
+                "date": '2020-01-18',
+                "score": 62
+            }
+        ], "reddit": [
+            {
+                "date": '2020-01-24',
+                "score": 54
+            },
+            {
+                "date": '2020-01-23',
+                "score": 49
+            },
+            ...,
+            {
+                "date": '2020-01-18',
+                "score": 68
+            }
+        ]
+    }
