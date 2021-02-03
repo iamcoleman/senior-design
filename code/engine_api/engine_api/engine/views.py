@@ -20,4 +20,4 @@ def create():
         keywords='coleman,cole,man'
     )
 
-    return True
+    return 'Complete!'
