@@ -1,5 +1,8 @@
 # Test Case Descriptions
 
+## Test Plan Summary
+Our approach to testing for this project will encompass all parts of the application: the front-end, the API and the node server. We will be utilizing a combination of black box and white box testing as well as a combination of abnormal and normal testing. First, we will focus on testing each component individually in the development environment. Once that is functional, we will move to testing the project as a whole in the production environment when all the components are connected. Below are the ten test cases that we plan to utilize to ensure our final product is both functional and stable.
+
 ### Test Case #0
 
 **Purpose:** Template
@@ -197,3 +200,18 @@
 - Unit
 
 -----
+
+## Test Case Matrix
+
+| Test Case | Normal/Abnormal | Blackbox/Whitebox | Functional/Performance | Unit/Integration |
+|-----------|-----------------|-------------------|------------------------|------------------|
+|<b>TC 1</b>| Normal| Whitebox|Functional|Integration|
+|<b>TC 2</b>| Normal| Whitebox|Functional|Integration|
+|<b>TC 3</b>| Normal| Whitebox|Functional|Integration|
+|<b>TC 4</b>| Normal| Whitebox|Functional|Integration|
+|<b>TC 5</b>| Normal| Whitebox|Performance|Integration|
+|<b>TC 6</b>| Normal| Whitebox|Performance|Integration|
+|<b>TC 7</b>| Normal| Blackbox|Functional|Integration|
+|<b>TC 8</b>| Normal| Whitebox|Functional|Unit|
+|<b>TC 9</b>| Normal| Whitebox|Performance|Unit|
+|<b>TC 10</b>| Normal| Blackbox|Functional|Unit|
