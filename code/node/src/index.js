@@ -44,18 +44,25 @@ async function scoreDateTwitter(query, date, dayAfter) {
     }
     const twitterPosts = await twitter.search(query, options);
     const scorePromises = [];
+    const hashtags = new Set();
     for(let status of twitterPosts.statuses) {
         const tweetDate = new Date(status.created_at).toISOString().substring(0, 10);
         if(tweetDate !== date) {
             break;
         }
         scorePromises.push(analyzeSentiment(status.text));
+        for(tag of status.entities.hashtags) {
+            hashtags.add(tag);
+        }
     }
     if(scorePromises.length === 0) {
         return 'no data';
     }
     const scores = await Promise.all(scorePromises);
-    return Math.round(scores.reduce((a, b) => a + b) / scores.length);
+    return {
+        score: Math.round(scores.reduce((a, b) => a + b) / scores.length),
+        hashtags: hashtags
+    };
 }
 
 async function scoreWeekTwitter(query, dates) {
@@ -64,13 +71,18 @@ async function scoreWeekTwitter(query, dates) {
         scorePromises.push(scoreDateTwitter(query, dates[i], dates[i + 1]));
     }
     const scores = [];
+    const hashtags = new Set();
     for(let i = 0; i < 7; i++) {
+        const result = await scorePromises[i];
         scores.push({
             date: dates[i],
-            score: await scorePromises[i]
+            score: result.score
         });
+        for(const tag of result.hashtags) {
+            hashtags.add(tag.text);
+        }
     }
-    return scores;
+    return { scores, hashtags };
 }
 
 async function scoreWeekReddit(query, dates) {
@@ -118,12 +130,13 @@ app.get('/api/sentiment/query/:query', async (req, res) => {
         dates.push(date.toISOString().substring(0, 10));
     }
 
-    const twitterPromise = scoreWeekTwitter(query, dates);
     const redditPromise = scoreWeekReddit(query, dates);
+    const twitterResult = await scoreWeekTwitter(query, dates);
 
     const response = {
-        twitter: await twitterPromise,
-        reddit: await redditPromise
+        twitter: twitterResult.scores,
+        reddit: await redditPromise,
+        hashtags: [...twitterResult.hashtags]
     };
     res.send(response);
 });

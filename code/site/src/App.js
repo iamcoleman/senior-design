@@ -24,47 +24,53 @@ function App() {
         <button className="searchButton" type="submit" disabled={loading}>Search</button>
       </form>
       {data !== null &&
-        <div className="chart">
-          <Line data={{
-            labels: data.twitter.map(day => day.date),
-            datasets: [{
-              label: 'Twitter',
-              backgroundColor: 'rgba(75,162,162,0.1)',
-              borderColor: 'rgba(75,162,162,1)',
-              data: data.twitter.map(day => day.score)
-            }, {
-              label: 'Reddit',
-              backgroundColor: 'rgba(190,75,75,0.1)',
-              borderColor: 'rgba(190,75,75,1)',
-              data: data.reddit.map(day => day.score)
-            }]
-          }}
-          width={1000}
-          height={500}
-          options={{
-            title: {
-              display: true,
-              text: `Sentiment for "${searched}"`,
-              fontSize: 20
-            },
-            elements: {
-              line: {
-                tension: 0 // disables bezier curves
-              }
-            },
-            maintainAspectRatio: false,
-            responsive: false,
-            scales: {
-              yAxes: [{
-                display: true,
-                ticks: {
-                  beginAtZero: true,
-                  max: 100
-                }
+        <>
+          <p style={{ textAlign: 'center' }}>Related hashtags: {
+            data.hashtags.length === 0 ? '' : data.hashtags
+              .map((tag) => <><a href={`https://twitter.com/search?q=%23${tag}`} target="_blank">#{tag}</a>, </>)
+          }</p>
+          <div className="chart">
+            <Line data={{
+              labels: data.twitter.map(day => day.date),
+              datasets: [{
+                label: 'Twitter',
+                backgroundColor: 'rgba(75,162,162,0.1)',
+                borderColor: 'rgba(75,162,162,1)',
+                data: data.twitter.map(day => day.score)
+              }, {
+                label: 'Reddit',
+                backgroundColor: 'rgba(190,75,75,0.1)',
+                borderColor: 'rgba(190,75,75,1)',
+                data: data.reddit.map(day => day.score)
               }]
-            }
-          }} />
-        </div>
+            }}
+            width={1000}
+            height={500}
+            options={{
+              title: {
+                display: true,
+                text: `Sentiment for "${searched}"`,
+                fontSize: 20
+              },
+              elements: {
+                line: {
+                  tension: 0 // disables bezier curves
+                }
+              },
+              maintainAspectRatio: false,
+              responsive: false,
+              scales: {
+                yAxes: [{
+                  display: true,
+                  ticks: {
+                    beginAtZero: true,
+                    max: 100
+                  }
+                }]
+              }
+            }} />
+          </div>
+        </>
       }
     </>
   );
