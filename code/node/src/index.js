@@ -71,7 +71,8 @@ async function scoreWeekTwitter(query, dates) {
         scorePromises.push(scoreDateTwitter(query, dates[i], dates[i + 1]));
     }
     const scores = [];
-    const hashtags = new Set();
+    const lowercaseHashtags = new Set();
+    const hashtags = [];
     for(let i = 0; i < 7; i++) {
         const result = await scorePromises[i];
         scores.push({
@@ -79,7 +80,12 @@ async function scoreWeekTwitter(query, dates) {
             score: result.score
         });
         for(const tag of result.hashtags) {
-            hashtags.add(tag.text);
+            const { text } = tag;
+            const lowerText = text.toLowerCase();
+            if(!lowercaseHashtags.has(lowerText)) {
+                lowercaseHashtags.add(lowerText);
+                hashtags.push(text);
+            }
         }
     }
     return { scores, hashtags };
@@ -136,7 +142,7 @@ app.get('/api/sentiment/query/:query', async (req, res) => {
     const response = {
         twitter: twitterResult.scores,
         reddit: await redditPromise,
-        hashtags: [...twitterResult.hashtags]
+        hashtags: twitterResult.hashtags
     };
     res.send(response);
 });

@@ -26,8 +26,11 @@ function App() {
       {data !== null &&
         <>
           <p style={{ textAlign: 'center' }}>Related hashtags: {
-            data.hashtags.length === 0 ? '' : data.hashtags
-              .map((tag) => <><a href={`https://twitter.com/search?q=%23${tag}`} target="_blank">#{tag}</a>, </>)
+            data.hashtags.length === 0 ? 'None' : data.hashtags
+              .map((tag, i) => <>
+                <a href={`https://twitter.com/search?q=%23${tag}`} target="_blank" rel="noreferrer">#{tag}</a>
+                {i === data.hashtags.length - 1 ? '' : ', '}
+              </>)
           }</p>
           <div className="chart">
             <Line data={{
