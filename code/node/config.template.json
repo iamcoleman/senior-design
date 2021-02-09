@@ -6,5 +6,8 @@
     "reddit": {
         "clientId": "reddit-client-id",
         "clientSecret": "reddit-client-secret"
+    },
+    "tumblr": {
+        "consumerKey": "tumblr-consumer-key"
     }
 }

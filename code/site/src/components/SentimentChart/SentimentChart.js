@@ -3,8 +3,9 @@ import { Line } from 'react-chartjs-2';
 import './SentimentChart.css';
 
 const colors = {
-  twitter: '75,162,162',
-  reddit: '190,75,75'
+  twitter: '29,161,242',
+  reddit: '255,86,0',
+  tumblr: '52,82,111'
 }
 
 function SentimentChart(props) {

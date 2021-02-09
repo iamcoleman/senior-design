@@ -1,7 +1,8 @@
 const fetch = require('node-fetch');
 const FormData = require('form-data');
 
-const config = require('../config');
+const analyzeSentiment = require('../helper/analyzeSentiment');
+const config = require('../../config');
 const authRequestParams = {
     method: 'POST',
     headers: {
@@ -40,4 +41,33 @@ async function search(query, options) {
     return data.json();
 }
 
-module.exports = { search };
+async function scoreWeek(query, dates) {
+    const searchPromise = search(query, {
+        limit: 70,
+        t: 'week'
+    });
+    const scoresByDate = {};
+    for(const date of dates) {
+        scoresByDate[date] = [];
+    }
+    const posts = await searchPromise;
+    for(const post of posts.data.children) {
+        const date = new Date(post.data.created * 1000).toISOString().substring(0, 10);
+        if(scoresByDate[date] !== undefined) {
+            scoresByDate[date].push(analyzeSentiment(post.data.selftext));
+        }
+    }
+    const scores = [];
+    for(const date of dates) {
+        const scorePromises = scoresByDate[date];
+        if(scorePromises.length === 0) {
+            scores.push('no data');
+        } else {
+            const dateScores = await Promise.all(scorePromises);
+            scores.push(Math.round(dateScores.reduce((a, b) => a + b) / dateScores.length));
+        }
+    }
+    return scores;
+}
+
+module.exports = { search, scoreWeek };

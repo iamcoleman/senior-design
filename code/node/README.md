@@ -8,37 +8,6 @@ To run with a production build of the front end, run `npm run build` in `code/si
 
 ## Usage
 
-### Tags
-
-Gather hashtags and subreddits associated with a query.
-
-    GET /api/tags/:query
-
-**Example response**:
-
-    {
-        "tags": [
-            "Thanksgiving",
-            "auspol",
-            "TrumpIsACriminal",
-            "News",
-            "NYT",
-            "FoxNews",
-            "Iran"
-        ],
-        "subreddits": [
-            "gifs",
-            "worldnews",
-            "politics",
-            "Documentaries",
-            "MurderedByWords",
-            "TrueOffMyChest",
-            "facepalm",
-            "LifeProTips",
-            "PoliticalCompassMemes"
-        ]
-    }
-
 ### Sentiment
 
 Find the sentiment associated with a query over the past week. Scores range from 0 to 100. Dates are all GMT.
