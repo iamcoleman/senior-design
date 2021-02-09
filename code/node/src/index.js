@@ -73,12 +73,9 @@ async function scoreWeekTwitter(query, dates) {
     const scores = [];
     const lowercaseHashtags = new Set();
     const hashtags = [];
-    for(let i = 0; i < 7; i++) {
-        const result = await scorePromises[i];
-        scores.push({
-            date: dates[i],
-            score: result.score
-        });
+    for(const scorePromise of scorePromises) {
+        const result = await scorePromise;
+        scores.push(result.score);
         for(const tag of result.hashtags) {
             const { text } = tag;
             const lowerText = text.toLowerCase();
@@ -111,16 +108,10 @@ async function scoreWeekReddit(query, dates) {
     for(const date of dates) {
         const scorePromises = scoresByDate[date];
         if(scorePromises.length === 0) {
-            scores.push({
-                date: date,
-                score: 'no data'
-            });
+            scores.push('no data');
         } else {
             const dateScores = await Promise.all(scorePromises);
-            scores.push({
-                date: date,
-                score: Math.round(dateScores.reduce((a, b) => a + b) / dateScores.length)
-            });
+            scores.push(Math.round(dateScores.reduce((a, b) => a + b) / dateScores.length));
         }
     }
     return scores;
@@ -140,9 +131,12 @@ app.get('/api/sentiment/query/:query', async (req, res) => {
     const twitterResult = await scoreWeekTwitter(query, dates);
 
     const response = {
-        twitter: twitterResult.scores,
-        reddit: await redditPromise,
-        hashtags: twitterResult.hashtags
+        dates: dates,
+        hashtags: twitterResult.hashtags,
+        scores: {
+            twitter: twitterResult.scores,
+            reddit: await redditPromise,
+        }
     };
     res.send(response);
 });
