@@ -9,3 +9,5 @@ __pycache__
 
 # .env files
 /code/engine-api/.env
+
+/.vscode

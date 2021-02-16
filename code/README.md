@@ -23,6 +23,7 @@ Make sure you have initialized the virtual environment `venv` for the applicatio
     - on Windows use: `py -m venv venv`
 3. Activate the virtual environment
     - on macOS and Linux use: `source venv/bin/activate`
-    - on Windows use: `.\venv\Scripts\activate`
+    - on Windows CMD use: `.\venv\Scripts\activate.bat`
+    - on Windows PowerShell use: `.\venv\Scripts\Activate.ps1`
 4. Install packages from the `requirements.txt` file in `senior-design/code/`
     - use: `pip install -r requirements.txt`

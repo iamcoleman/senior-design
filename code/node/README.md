@@ -8,73 +8,19 @@ To run with a production build of the front end, run `npm run build` in `code/si
 
 ## Usage
 
-### Tags
-
-Gather hashtags and subreddits associated with a query.
-
-    GET /api/tags/:query
-
-**Example response**:
-
-    {
-        "tags": [
-            "Thanksgiving",
-            "auspol",
-            "TrumpIsACriminal",
-            "News",
-            "NYT",
-            "FoxNews",
-            "Iran"
-        ],
-        "subreddits": [
-            "gifs",
-            "worldnews",
-            "politics",
-            "Documentaries",
-            "MurderedByWords",
-            "TrueOffMyChest",
-            "facepalm",
-            "LifeProTips",
-            "PoliticalCompassMemes"
-        ]
-    }
-
 ### Sentiment
 
-Find the sentiment associated with a query over time. Scores range from 0 to 100. Dates are all GMT.
+Find the sentiment associated with a query over the past week. Scores range from 0 to 100. Dates are all GMT.
 
     GET /api/sentiment/query/:query
 
 **Example response**:
 
     {
-        "twitter": [
-            {
-                "date": '2020-01-24',
-                "score": 68
-            },
-            {
-                "date": '2020-01-23',
-                "score": 65
-            },
-            ...,
-            {
-                "date": '2020-01-18',
-                "score": 62
-            }
-        ], "reddit": [
-            {
-                "date": '2020-01-24',
-                "score": 54
-            },
-            {
-                "date": '2020-01-23',
-                "score": 49
-            },
-            ...,
-            {
-                "date": '2020-01-18',
-                "score": 68
-            }
-        ]
+        "dates": ["2020-01-18", "2020-01-19", ..., "2020-01-24"],
+        "hashtags": ["Thanksgiving", "auspol", ..., "Iran"],
+        "scores": {
+            "twitter": [68, 65, 58, 59, 67, 61, 62],
+            "reddit": [54, 49, 55, 60, 58, 64, 68]
+        }
     }
