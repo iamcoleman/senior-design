@@ -2,7 +2,7 @@
 import datetime as dt
 import enum
 
-from engine_api.database import Column, PkModel, db
+from engine_api.database import Column, PkModel, db, relationship
 
 
 class StatusEnum(enum.Enum):
@@ -21,8 +21,8 @@ class AnalysisRequest(PkModel):
     opened_at = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
     status = Column(db.Enum(StatusEnum), nullable=False, default=StatusEnum.CREATED)
     # TODO: both text columns are placeholders, will eventually link to a Twitter/Reddit table that holds the text
-    text_twitter = Column(db.Boolean(), default=False)
-    text_reddit = Column(db.Boolean(), default=False)
+    text_twitter = relationship("TextTwitter", back_populates="analysis_request")
+    text_reddit = relationship("TextReddit", back_populates="analysis_request")
 
     def __init__(self, keywords, **kwargs):
         """Create instance."""
@@ -46,3 +46,22 @@ class AnalysisRequest(PkModel):
     def __repr__(self):
         """Represent instance as a unique string."""
         return f"<AnalysisRequest({self.id!r})>"
+
+
+class TextTwitter(PkModel):
+    """Table that stores all Tweets related to an AnalysisRequest"""
+
+    __tablename__ = "text_twitter"
+    analysis_request_id = Column(db.Integer, db.ForeignKey("analysis_request.id"), nullable=False)
+    analysis_request = relationship("AnalysisRequest", back_populates="text_twitter")
+
+    def __init__(self, analysis_request_id, **kwargs):
+        super().__init__(analysis_request_id=analysis_request_id, **kwargs)
+
+
+class TextReddit(PkModel):
+    """Table that stores all Reddit posts/comments related to an AnalysisRequest"""
+
+    __tablename__ = "text_reddit"
+    analysis_request_id = Column(db.Integer, db.ForeignKey("analysis_request.id"))
+    analysis_request = relationship("AnalysisRequest", back_populates="text_reddit")
