@@ -2,6 +2,7 @@ const fetch = require('node-fetch');
 
 const analyzeSentiment = require('../helper/analyzeSentiment');
 const config = require('../../config');
+const computeDataPoint = require('../helper/computeDataPoint');
 const apiKey = config.tumblr.consumerKey;
 
 async function searchTag(tag, options) {
@@ -37,12 +38,8 @@ async function scoreDateByTag(tag, date, dayAfter) {
             scorePromises.push(analyzeSentiment(response.body));
         }
     }
-    if(scorePromises.length === 0) {
-        return undefined;
-    } else {
-        const scores = await Promise.all(scorePromises);
-        return Math.round(scores.reduce((a, b) => a + b) / scores.length);
-    }
+
+    return computeDataPoint(await Promise.all(scorePromises));
 }
 
 function scoreWeekByTag(tag, dates) {

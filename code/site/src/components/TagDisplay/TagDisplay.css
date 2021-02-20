@@ -1,0 +1,14 @@
+.tagDisplay {
+text-align: center;
+max-width: 50rem;
+margin-left: calc(50% - 25rem);
+}
+
+.tagDisplay button {
+background: none;
+border: none;
+padding: 0;
+color: #069;
+text-decoration: underline;
+cursor: pointer;
+}
