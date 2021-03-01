@@ -1,0 +1,103 @@
+html {
+    background-color: grey;
+}
+
+body {
+    width: 48in;
+    height: 36in;
+    background-color: white;
+    margin: 0;
+    font-family: 'Segoe UI';
+    padding: 1in;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 0.5in;
+}
+
+h1 {
+    font-size: 1.8in;
+    margin: 0 0 1.2in 0;
+    text-align: center;
+}
+
+#authors {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin: 0.5in;
+}
+
+.author {
+    margin: 0 0.8in;
+}
+
+.headshot {
+    border-radius: 50%;
+    width: 3in;
+}
+
+.advisor {
+    font-style: italic;
+    margin: 0 0 0.5in 0;
+    text-align: center;
+}
+
+p, figcaption {
+    font-size: 0.4in;
+}
+
+figcaption {
+    text-align: center;
+}
+
+main {
+    display: flex;
+}
+
+.topic-group {
+    display: flex;
+    flex-basis: 30%;
+    flex-direction: column;
+    margin: 0 0.5in;
+}
+
+.topic-group:nth-child(2) {
+    flex-basis: 40%;
+}
+
+.topic {
+    border: 0.05in solid #186e6e;
+    margin: 0.5in 0;
+    border-radius: 0.3in;
+    overflow: hidden;
+}
+
+.topic > * {
+    padding-left: 0.4in;
+    padding-right: 0.4in;
+}
+
+.topic > h3 {
+    font-size: 0.6in;
+    margin: 0;
+    border-bottom: 0.05in solid #186e6e;
+    background-color: #e5f3f3;
+    color: #186e6e;
+    padding-top: 0.2in;
+    padding-bottom: 0.25in;
+}
+
+.topic > p {
+    margin-top: 0.3in;
+}
+
+.screenshot {
+    margin: 0.5in 0;
+}
+
+.screenshot > img {
+    width: 100%;
+    border: 0.1in solid black;
+}
