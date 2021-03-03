@@ -114,3 +114,8 @@ main {
     margin: 0.2in 0.5in;
     width: 5in;
 }
+
+.design-diagram {
+    max-width: 95%;
+    height: auto;
+}
