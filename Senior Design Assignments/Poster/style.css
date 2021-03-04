@@ -44,7 +44,7 @@ h1 {
     text-align: center;
 }
 
-p, figcaption {
+p, figcaption, ul {
     font-size: 0.5in;
 }
 
@@ -118,4 +118,8 @@ main {
 .design-diagram {
     max-width: 95%;
     height: auto;
+}
+
+.topic > ul {
+    margin-left: 0.5in;
 }
