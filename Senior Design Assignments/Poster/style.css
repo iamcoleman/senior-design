@@ -3,12 +3,15 @@ html {
 }
 
 body {
-    width: 48in;
-    height: 36in;
     background-color: white;
     margin: 0;
     font-family: 'Segoe UI';
     padding: 1in;
+}
+
+html, body {
+    width: 48in;
+    height: 36in;
 }
 
 header {
