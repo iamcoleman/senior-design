@@ -75,6 +75,7 @@ def post_tweets():
     # get the JSON data from the request
     data = request.json
 
+    # TODO: add error handling for this function
     insert_tweets(data['analysis_request_id'], data['tweets'])
 
     return make_response(jsonify(success=True), 200)
@@ -107,7 +108,8 @@ def insert_tweets(analysis_request_id, tweets):
 @blueprint.route('/tweets', methods=['GET'])
 def get_tweets():
     """
-    Gets Tweets (analyzed, not analyzed, or all) for a specific AnalysisRequest
+    Gets Tweets (analyzed, not analyzed, or all) for a specific AnalysisRequest.
+    'filter_analyzed' takes precedence over 'filter_not_analyzed' if both set to True.
 
     :post_body: {
         "analysis_request_id": 1,

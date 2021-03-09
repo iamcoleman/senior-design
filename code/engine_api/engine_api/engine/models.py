@@ -106,5 +106,31 @@ class TextReddit(PkModel):
     """
 
     __tablename__ = "text_reddit"
-    analysis_request_id = Column(db.Integer, db.ForeignKey("analysis_request.id"))
+    analysis_request_id = Column(db.Integer, db.ForeignKey("analysis_request.id"), nullable=False)
     analysis_request = relationship("AnalysisRequest", back_populates="text_reddit")
+    created_at = Column(db.DateTime, nullable=False)
+    text = Column(db.Text, nullable=False)
+    is_analyzed = Column(db.Boolean, nullable=False, default=False)
+
+    def __init__(self, analysis_request_id, created_at, text, **kwargs):
+        super().__init__(
+            analysis_request_id=analysis_request_id,
+            created_at=created_at,
+            text=text,
+            **kwargs
+        )
+
+    @property
+    def serialize(self):
+        """Return object data in easily serializable format"""
+        return {
+            'id': self.id,
+            'analysis_request_id': self.analysis_request_id,
+            'created_at': self.created_at.isoformat(),
+            'text': self.text,
+            'is_analyzed': self.is_analyzed
+        }
+
+    def __repr__(self):
+        """Represent instance as a unique string."""
+        return f"<TextReddit({self.id!r})>"
