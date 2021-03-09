@@ -3,6 +3,7 @@ const FormData = require('form-data');
 
 const analyzeSentiment = require('../helper/analyzeSentiment');
 const config = require('../../config');
+const computeDataPoint = require('../helper/computeDataPoint');
 const authRequestParams = {
     method: 'POST',
     headers: {
@@ -22,9 +23,10 @@ let tokenExpirationTime;
 
 async function search(query, options) {
     if(!tokenExpirationTime || tokenExpirationTime < process.uptime()) {
+        tokenExpirationTime = process.uptime();
         const authResponse = await fetch('https://www.reddit.com/api/v1/access_token', authRequestParams);
         const credentials = await authResponse.json();
-        tokenExpirationTime = process.uptime() + credentials.expires_in;
+        tokenExpirationTime += credentials.expires_in;
         requestParams.headers.Authorization = `Bearer ${credentials.access_token}`;
     }
 
@@ -59,13 +61,7 @@ async function scoreWeek(query, dates) {
     }
     const scores = [];
     for(const date of dates) {
-        const scorePromises = scoresByDate[date];
-        if(scorePromises.length === 0) {
-            scores.push('no data');
-        } else {
-            const dateScores = await Promise.all(scorePromises);
-            scores.push(Math.round(dateScores.reduce((a, b) => a + b) / dateScores.length));
-        }
+        scores.push(computeDataPoint(await Promise.all(scoresByDate[date])))
     }
     return scores;
 }

@@ -2,6 +2,7 @@ const fetch = require('node-fetch');
 
 const analyzeSentiment = require('../helper/analyzeSentiment');
 const config = require('../../config');
+const computeDataPoint = require('../helper/computeDataPoint');
 const { bearerToken } = config.twitter;
 
 const requestParams = {
@@ -45,14 +46,9 @@ async function scoreDate(query, date, dayAfter) {
             hashtags.add(tag.text);
         }
     }
-    let score;
-    if(scorePromises.length === 0) {
-        score = undefined;
-    } else {
-        const scores = await Promise.all(scorePromises);
-        score = Math.round(scores.reduce((a, b) => a + b) / scores.length);
-    }
-    return { score, hashtags };
+
+    const dataPoint = computeDataPoint(await Promise.all(scorePromises));
+    return { dataPoint, hashtags };
 }
 
 async function scoreWeek(query, dates) {
@@ -65,7 +61,7 @@ async function scoreWeek(query, dates) {
     const hashtags = [];
     for(const scorePromise of scorePromises) {
         const result = await scorePromise;
-        scores.push(result.score);
+        scores.push(result.dataPoint);
         for(const tag of result.hashtags) {
             const lowerText = tag.toLowerCase();
             if(!lowercaseHashtags.has(lowerText)) {

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Sentiment Analysis Tool Poster</title>
+        <link rel="stylesheet" href="style.css" />
+        <meta charset="UTF-8">
+    </head>
+    <body>
+        <h1>Sentiment Analysis Tool</h1>
+        <main>
+            <section class="topic-group">
+                <article class="topic">
+                    <h3>Background</h3>
+                    <p>
+                        There are plenty of tools that allow users to assess the amount of interest in a topic
+                        over time but provide no insight as to how people feel about that topic. To Google
+                        Trends, there is no difference between a spike of excitement and a spike of anger. As
+                        a consumer, brand manager, or investor, gauging sentiment can be as important as
+                        gauging interest, so this is a crucial lack of information.
+                    </p>
+                </article>
+                <article class="topic">
+                    <h3>Our Platform</h3>
+                    <p>
+                        This project is a sentiment analysis and aggregation web application. Users can search
+                        for any set of keywords (e.g. a brand name or topic) and they will see a graph of
+                        public opinion regarding their search. The result data presented to the user is
+                        constructed from social media posts that are processed through a natural language
+                        processing engine. Users will see public sentiment changes over time and can break down
+                        results by social media platform.
+                    </p>
+                </article>
+                <article class="topic">
+                    <h3>Technologies</h3>
+                    <section class="logos">
+                        <img class="logo" src="images/logos/react.png" />
+                        <img class="logo" src="images/logos/chartjs.png" />
+                        <img class="logo" src="images/logos/node.png" />
+                        <img class="logo" src="images/logos/express.png" />
+                        <img class="logo" src="images/logos/python.png" />
+                        <img class="logo" src="images/logos/flask.png" />
+                        <img class="logo" src="images/logos/tensorflow.png" />
+                    </section>
+                </article>
+            </section>
+            <section class="topic-group">
+                <section id="authors">
+                    <figure class="author">
+                        <img class="headshot" src="images/headshots/jeet.jpg" />
+                        <figcaption>Jeet Shah</figcaption>
+                    </figure>
+                    <figure class="author">
+                        <img class="headshot" src="images/headshots/coleman.jpg" />
+                        <figcaption>Coleman Lyski</figcaption>
+                    </figure>
+                    <figure class="author">
+                        <img class="headshot" src="images/headshots/tim.jpg" />
+                        <figcaption>Tim McCabe</figcaption>
+                    </figure>
+                </section>
+                <p class="advisor">Advised by Dr. Ali Minai</p>
+                <figure class="screenshot">
+                    <img src="images/screenshot.png" />
+                    <figcaption>A screenshot of the tool in action</figcaption>
+                </figure>
+                <article class="topic">
+                    <h3>Technical Design</h3>
+                    <p>
+                        The React web interface handles user interaction and formats the data on the fly based
+                        on the user's selections. The Node routing server manages communication between the web
+                        interface, social media platforms, and the sentiment analysis engine, concurrently
+                        making requests to different servers to minimize delay. The Python engine API receives
+                        all of the social media data, schedules it for analysis by the sentiment analysis engine,
+                        and aggregates the results. The Python sentiment analysis engine interprets the sentiment
+                        of social media posts and generates a score for each one based on how positive or negative
+                        it is.
+                    </p>
+                </article>
+            </section>
+            <section class="topic-group">
+                <article class="topic">
+                    <h3>Design Diagram</h3>
+                    <img src="images/design-D2.png" class="design-diagram" />
+                </article>
+                <article class="topic">
+                    <h3>Achievements</h3>
+                    <ul>
+                        <li>
+                            Realtime, concurrent data aggregation and processing from three different social media
+                            platforms
+                        </li>
+                        <li>
+                            A robust Sentiment Analysis API that allows the analysis part of our application to run
+                            standalone without the need for a frontend
+                        </li>
+                        <li>
+                            Successfully utilized Googles Universal Sentence Encoder along with a Recurrent Neural
+                            Network to build a classifier with nearly 80% sentiment accuracy. Classifier was trained
+                            using 1.6 million record data set
+                        </li>
+                    </ul>
+                </article>
+                <article class="topic">
+                    <h3>Future Goals</h3>
+                    <ul>
+                        <li>
+                            Create a customizable date range for the sentiment graph. This will allow users to
+                            view trends over a longer period of time.
+                        </li>
+                        <li>
+                            Show users more statistical analysis of the sentiment data. This will help differentiate
+                            between a change in sentiment and statistical noise.
+                        </li>
+                        <li>
+                            Add a homepage with popular search results pre-populated. This will engage users and
+                            show them how others are using the platform.
+                        </li>
+                        <li>
+                            Implement targeted sentiment analysis. This will enable our engine to assess the
+                            sentiment of text with respect to the search terms.
+                        </li>
+                    </ul>
+                </article>
+            </section>
+        </main>
+    </body>
+</html>
