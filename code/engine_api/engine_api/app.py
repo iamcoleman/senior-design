@@ -17,6 +17,8 @@ from engine_api.extensions import (
     migrate,
 )
 
+from flasgger import Swagger
+
 
 def create_app(config_object="engine_api.settings"):
     """Create application factory, as explained here: http://flask.pocoo.org/docs/patterns/appfactories/.
@@ -25,6 +27,7 @@ def create_app(config_object="engine_api.settings"):
     """
     app = Flask(__name__.split(".")[0])
     app.config.from_object(config_object)
+    swagger = Swagger(app)
     register_extensions(app)
     register_blueprints(app)
     register_errorhandlers(app)

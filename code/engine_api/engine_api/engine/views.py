@@ -19,10 +19,40 @@ def test():
 @blueprint.route('/analysis-request', methods=['GET'])
 def get_analysis_request():
     """
-    :post_body: {
-        "analysis_request_id": 1
-    }
-    :return:
+    Get an existing Analysis Request Object
+    ---
+    parameters:
+      - name: body
+        in: body
+        description: The ID of the Analysis Request to get
+        schema:
+          $ref: '#/definitions/AnalysisRequestGetBody'
+        required: true
+    definitions:
+      AnalysisRequestGetBody:
+        type: object
+        properties:
+          analysis_request_id:
+            type: number
+      AnalysisRequestGetResponse:
+        type: object
+        properties:
+          id:
+            type: number
+          keywords:
+            type: array
+            items:
+              type: string
+          opened_at:
+            type: string
+          status:
+            type: string
+            enum: [CREATED, LOADING_DATA, ANALYZING, READY, FAILURE]
+    responses:
+      200:
+        description: The Analysis Request object
+        schema:
+          $ref: '#/definitions/AnalysisRequestGetResponse'
     """
     # get the JSON data from the request
     data = request.json
@@ -37,10 +67,33 @@ def get_analysis_request():
 @blueprint.route('/analysis-request', methods=['POST'])
 def create_analysis_request():
     """
-    :post_body: {
-        "keywords": ["key", "words"]
-    }
-    :return:
+    Create an Analysis Request Object
+    ---
+    parameters:
+      - name: body
+        in: body
+        description: Array of keywords for the analysis
+        schema:
+          $ref: '#/definitions/AnalysisRequestCreationBody'
+        required: true
+    definitions:
+      AnalysisRequestCreationBody:
+        type: object
+        properties:
+          keywords:
+            type: array
+            items:
+              type: string
+      AnalysisRequestCreationResponse:
+        type: object
+        properties:
+          analysis_request_id:
+            type: number
+    responses:
+      200:
+        description: The ID of the newly created Analysis Request
+        schema:
+          $ref: '#/definitions/AnalysisRequestCreationResponse'
     """
     # get the JSON data from the request
     data = request.json
