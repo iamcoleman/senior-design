@@ -45,8 +45,7 @@ app.get('/api/sentiment/query/:query', async (req, res) => {
     setTimeout(() => {
         const job = activeJobs[analysisRequestId];
         if(job !== undefined) {
-            const { res } = job;
-            res.status(HTTP_STATUS.SERVER_ERROR).send({
+            job.res.status(HTTP_STATUS.SERVER_ERROR).send({
                 message: 'Sentiment analysis did not complete'
             });
         }
@@ -61,10 +60,11 @@ app.post('/api/results/:analysisRequestId', async (req, res) => {
             message: 'Request has expired'
         });
     }
-    const { res, hashtags, dates } = job;
-    delete activeJobs[analysisRequestId];
+    res.send();
+    const { hashtags, dates } = job;
     const scores = req.body;
-    res.send({ dates, hashtags, scores });
+    job.res.send({ dates, hashtags, scores });
+    delete activeJobs[analysisRequestId];
 });
 
 app.listen(port, () => {
