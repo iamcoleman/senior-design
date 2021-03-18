@@ -37,7 +37,8 @@ Find the sentiment associated with a query over the past week. Scores range from
 
 **Origin**: Sentiment analysis engine API
 
-Send the results of a sentiment analysis. Throws a `410 GONE` error if the job took too long to complete
+Send the results of a sentiment analysis. Throws a `404 GONE` error if the job ID is invalid, which will occur if the request
+has expired or was never created.
 
     POST /api/results/:analysisRequestId
 
@@ -46,5 +47,5 @@ Send the results of a sentiment analysis. Throws a `410 GONE` error if the job t
 **Example error response**:
 
     {
-        "message": "Request has expired"
+        "message": "Request not found"
     }

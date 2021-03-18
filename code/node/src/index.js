@@ -7,13 +7,14 @@ const tumblr = require('./platform/tumblr');
 const sentimentEngine = require('./sentimentEngine');
 
 const HTTP_STATUS = {
-    GONE: 410,
+    NOT_FOUND: 404,
     SERVER_ERROR: 500
 }
 
 const app = express();
 const { port, requestExpirationMillis } = config;
 
+app.use(express.json());
 app.use(express.static('public'));
 
 const activeJobs = {};
@@ -31,6 +32,7 @@ app.get('/api/sentiment/query/:query', async (req, res) => {
     }
 
     const analysisRequestId = await jobPromise;
+    console.log(analysisRequestId);
 
     let tumblrPromise = null;
     if(query.charAt(0) === '#') {
@@ -56,8 +58,8 @@ app.post('/api/results/:analysisRequestId', async (req, res) => {
     const { analysisRequestId } = req.params;
     const job = activeJobs[analysisRequestId];
     if(job === undefined) {
-        return res.status(HTTP_STATUS.GONE).send({
-            message: 'Request has expired'
+        return res.status(HTTP_STATUS.NOT_FOUND).send({
+            message: 'Request not found'
         });
     }
     res.send();

@@ -1,6 +1,7 @@
 {
     "port": 4000,
-    "sentimentEngineLocation": "http://http://127.0.0.1:5000",
+    "requestExpirationMillis": 600000,
+    "sentimentEngineLocation": "http://127.0.0.1:5000",
     "twitter": {
         "bearerToken": "twitter-bearer-token"
     },

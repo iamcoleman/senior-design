@@ -2,6 +2,9 @@ const fetch = require('node-fetch');
 
 const config = require('../config');
 const { sentimentEngineLocation } = config;
+const headers = {
+    'Content-Type': 'application/json'
+};
 
 async function createJob(query) {
     let keywords;
@@ -12,7 +15,8 @@ async function createJob(query) {
     }
     const response = await fetch(`${sentimentEngineLocation}/engine/analysis-request`, {
         method: 'POST',
-        body: { keywords }
+        headers,
+        body: JSON.stringify({ keywords })
     });
     const responseBody = await response.json();
     return responseBody.analysis_request_id;
@@ -21,7 +25,8 @@ async function createJob(query) {
 function analyzeTweets(analysis_request_id, tweets) {
     return fetch(`${sentimentEngineLocation}/engine/tweets`, {
         method: 'POST',
-        body: { analysis_request_id, tweets }
+        headers,
+        body: JSON.stringify({ analysis_request_id, tweets })
     });
 }
 
