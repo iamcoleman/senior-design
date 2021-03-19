@@ -16,24 +16,18 @@ def test():
     return 'It works!'
 
 
-@blueprint.route('/analysis-request', methods=['GET'])
-def get_analysis_request():
+@blueprint.route('/analysis-request/<id>', methods=['GET'])
+def get_analysis_request(id):
     """
     Get an existing Analysis Request Object
     ---
     parameters:
-      - name: body
-        in: body
+      - name: id
+        in: path
         description: The ID of the Analysis Request to get
-        schema:
-          $ref: '#/definitions/AnalysisRequestGetBody'
         required: true
+        type: number
     definitions:
-      AnalysisRequestGetBody:
-        type: object
-        properties:
-          analysis_request_id:
-            type: number
       AnalysisRequestGetResponse:
         type: object
         properties:
@@ -54,12 +48,8 @@ def get_analysis_request():
         schema:
           $ref: '#/definitions/AnalysisRequestGetResponse'
     """
-    # get the JSON data from the request
-    data = request.json
-    analysis_request_id = data['analysis_request_id']
-
     # query on the analysis_request_id
-    analysis_request = AnalysisRequest.query.get(analysis_request_id)
+    analysis_request = AnalysisRequest.query.get(id)
 
     return jsonify(analysis_request.serialize)
 
@@ -113,17 +103,33 @@ def create_analysis_request():
 @blueprint.route('/tweets', methods=['POST'])
 def post_tweets():
     """
-    :post_body: {
-        "analysis_request_id": 1,
-        "tweets": [
-            <TweetObject>
-        ]
-    }
-    :TweetObject: {
-        "created_at": DateTime,
-        "text": "text of the tweet"
-    }
-    :return:
+    Send a batch of Tweets to be attached to an Analysis Request
+    ---
+    parameters:
+      - name: body
+        in: body
+        description: Array of Tweets
+        schema:
+          $ref: '#/definitions/TweetPostBody'
+        required: true
+    definitions:
+      TweetPostBody:
+        type: object
+        properties:
+          analysis_request_id:
+            type: number
+          tweets:
+            type: array
+            items:
+              type: object
+              properties:
+                created_at:
+                  type: string
+                text:
+                  type: string
+    responses:
+      200:
+        description: Confirmation that the tweets were successfully loaded
     """
     # get the JSON data from the request
     data = request.json
@@ -158,41 +164,69 @@ def insert_tweets(analysis_request_id, tweets):
     return result
 
 
-@blueprint.route('/tweets', methods=['GET'])
-def get_tweets():
+@blueprint.route('/analysis-request/<analysis_request_id>/tweets', methods=['GET'])
+def get_tweets(analysis_request_id):
     """
-    Gets Tweets (analyzed, not analyzed, or all) for a specific AnalysisRequest.
-    'filter_analyzed' takes precedence over 'filter_not_analyzed' if both set to True.
-
-    :post_body: {
-        "analysis_request_id": 1,
-        "filter_analyzed": Boolean,
-        "filter_not_analyzed": Boolean
-    }
-    :return: list of serialized Tweets
+    Get Tweets attached to an Analysis Request
+    Use '?analyzed=1' to return only the Tweets that have already been analyzed
+    Use '?not-analyzed=1' to return only the Tweets that have not been analyzed
+    Note: analyzed will take precedence over not-analyzed if both are set to 1
+    ---
+    parameters:
+      - name: analysis_request_id
+        in: path
+        description: The ID of the Analysis Request to get Tweets for
+        required: true
+        type: number
+      - name: analyzed
+        in: query
+        description: Boolean (0/1) to filter for only the Tweets that have been analyzed
+        required: false
+        type: number
+      - name: not-analyzed
+        in: query
+        description: Boolean (0/1) to filter for only the Tweets that have not been analyzed
+        required: false
+        type: number
+    definitions:
+      AnalysisRequestTweetsResponse:
+        type: array
+        items:
+          type: object
+          properties:
+            created_at:
+              type: string
+            text:
+              type: string
+    responses:
+      200:
+        description: Array of Tweets
+        schema:
+          $ref: '#/definitions/AnalysisRequestTweetsResponse'
     """
-    data = request.json
+    filter_analyzed = int(request.args.get('analyzed', default=0))
+    filter_not_analyzed = int(request.args.get('not-analyzed', default=0))
 
     # 'filter_analyzed' takes precedence over 'filter_not_analyzed' if both set to True
     tweets = None
-    if data['filter_analyzed']:
+    if filter_analyzed:
         # return analyzed tweets
         try:
-            tweets = TextTwitter.query.filter_by(is_analyzed=True).all()
+            tweets = TextTwitter.query.filter_by(analysis_request_id=analysis_request_id, is_analyzed=True).all()
         except SQLAlchemyError as e:
             print(e)
             print(type(e))
-    elif data['filter_not_analyzed']:
+    elif filter_not_analyzed:
         # return not analyzed tweets
         try:
-            tweets = TextTwitter.query.filter_by(is_analyzed=False).all()
+            tweets = TextTwitter.query.filter_by(analysis_request_id=analysis_request_id, is_analyzed=False).all()
         except SQLAlchemyError as e:
             print(e)
             print(type(e))
     else:
         # return all tweets
         try:
-            tweets = TextTwitter.query.all()
+            tweets = TextTwitter.query.filter_by(analysis_request_id=analysis_request_id).all()
         except SQLAlchemyError as e:
             print(e)
             print(type(e))
