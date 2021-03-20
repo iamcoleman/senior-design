@@ -118,6 +118,8 @@ def post_tweets():
         properties:
           analysis_request_id:
             type: number
+          last_batch:
+            type: boolean
           tweets:
             type: array
             items:
@@ -136,6 +138,10 @@ def post_tweets():
 
     # TODO: add error handling for this function
     insert_tweets(data['analysis_request_id'], data['tweets'])
+
+    if data['last_batch']:
+        print('last tweet batch received')
+        begin_tweet_analysis()
 
     return make_response(jsonify(success=True), 200)
 
@@ -237,3 +243,6 @@ def get_tweets(analysis_request_id):
 
     return jsonify(response)
 
+
+def begin_tweet_analysis():
+    return
