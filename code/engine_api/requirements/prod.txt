@@ -41,3 +41,7 @@ environs==9.3.0
 
 # Flasgger / Swagger
 flasgger==0.9.5
+
+# Celery
+celery==5.0.5
+redis==3.5.3

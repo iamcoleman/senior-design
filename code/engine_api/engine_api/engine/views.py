@@ -8,12 +8,24 @@ from sqlalchemy.exc import SQLAlchemyError
 from engine_api.engine.models import AnalysisRequest
 from engine_api.engine.models import TextTwitter
 
+# celery tasks
+from engine_api.tasks.workers import make_file
+import os
+
+
 blueprint = Blueprint('engine', __name__, url_prefix='/engine')
 
 
 @blueprint.route('/test', methods=['GET'])
 def test():
     return 'It works!'
+
+
+@blueprint.route('/celery/<string:fname>/<string:content>')
+def test_celery(fname, content):
+    fpath = os.path.join(os.path.dirname(os.path.abspath(__file__)), fname)
+    make_file.delay(fpath, content)
+    return f'Find your file @ <code>{fpath}</code>'
 
 
 @blueprint.route('/analysis-request/<id>', methods=['GET'])
