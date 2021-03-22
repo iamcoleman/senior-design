@@ -5,6 +5,9 @@ import sys
 
 from flask import Flask, render_template
 
+# Celery instance coming from __init__.py
+from engine_api import celery
+
 from engine_api import commands, engine, public, user
 from engine_api.extensions import (
     bcrypt,
@@ -28,6 +31,7 @@ def create_app(config_object="engine_api.settings"):
     app = Flask(__name__.split(".")[0])
     app.config.from_object(config_object)
     swagger = Swagger(app)
+    init_celery(app, celery)
     register_extensions(app)
     register_blueprints(app)
     register_errorhandlers(app)
@@ -35,6 +39,17 @@ def create_app(config_object="engine_api.settings"):
     register_commands(app)
     configure_logger(app)
     return app
+
+
+def init_celery(app, cel):
+    # cel.conf.update(app.config) # See this: https://stackoverflow.com/questions/54548886/celery-server-error-cannot-mix-new-setting-names-with-old-setting-names
+
+    class ContextTask(cel.Task):
+        def __call__(self, *args, **kwargs):
+            with app.app_context():
+                return self.run(*args, **kwargs)
+
+    cel.Task = ContextTask
 
 
 def register_extensions(app):
@@ -47,6 +62,7 @@ def register_extensions(app):
     debug_toolbar.init_app(app)
     migrate.init_app(app, db)
     flask_static_digest.init_app(app)
+    init_celery(app, celery)
     return None
 
 

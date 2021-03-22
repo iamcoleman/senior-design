@@ -23,3 +23,7 @@ CACHE_TYPE = "simple"  # Can be "memcached", "redis", etc.
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 WTF_CSRF_CHECK_DEFAULT = False  # TODO: disables CSRF by default, might want to enable later on
+
+# TODO: These are set for local redis server on port 6379
+CELERY_RESULT_BACKEND = "redis://localhost:6379"
+CELERY_BROKER_URL = "redis://localhost:6379"
