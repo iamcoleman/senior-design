@@ -29,7 +29,6 @@ def create_app(config_object="engine_api.settings"):
     :param config_object: The configuration object to use.
     """
     app = Flask(__name__.split(".")[0])
-    print(f'app name: {__name__.split(".")[0]}')
     app.config.from_object(config_object)
     swagger = Swagger(app)
     init_celery(app, celery)
