@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import searchQuery from '../../api/searchQuery';
 import SentimentChart from '../SentimentChart/SentimentChart';
 import TagDisplay from '../TagDisplay/TagDisplay';
 import './App.css';
@@ -12,7 +13,7 @@ function App() {
 
   const search = async (searchText) => {
     setLoading(true);
-    setData(await (await fetch(`/api/sentiment/query/${encodeURIComponent(searchText)}`)).json());
+    setData(await searchQuery(searchText));
     setSearched(searchText);
     setLoading(false);
   }

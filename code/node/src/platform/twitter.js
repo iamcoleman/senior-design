@@ -49,20 +49,18 @@ async function scoreDate(analysisRequestId, query, date, dayAfter) {
         }
     }
 
-    await sentimentEngine.analyzeTweets(analysisRequestId, postsForEngine);
-    return hashtags;
+    const analysisPromise = sentimentEngine.analyzePosts(analysisRequestId, 'tweets', postsForEngine);
+    return { hashtags, analysisPromise };
 }
 
 async function scoreWeek(analysisRequestId, query, dates) {
     const analysisPromises = [];
-    for(let i = 0; i < 7; i++) {
-        analysisPromises.push(scoreDate(analysisRequestId, query, dates[i], dates[i + 1]));
-    }
     const lowercaseHashtags = new Set();
     const hashtags = [];
-    for(const analysisPromise of analysisPromises) {
-        const hashtagsForDate = await analysisPromise;
-        for(const tag of hashtagsForDate) {
+    for(let i = 0; i < 7; i++) {
+        const result = await scoreDate(analysisRequestId, query, dates[i], dates[i + 1]);
+        analysisPromises.push(result.analysisPromises);
+        for(const tag of result.hashtags) {
             const lowerText = tag.toLowerCase();
             if(!lowercaseHashtags.has(lowerText)) {
                 lowercaseHashtags.add(lowerText);
@@ -70,7 +68,10 @@ async function scoreWeek(analysisRequestId, query, dates) {
             }
         }
     }
-    return hashtags;
+    Promise.all(analysisPromises).then(() => {
+        sentimentEngine.allPostsSent(analysisRequestId, 'tweets');
+    });
+    return hashtags
 }
 
 module.exports = { search, scoreWeek };

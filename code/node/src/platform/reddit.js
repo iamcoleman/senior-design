@@ -59,7 +59,8 @@ async function scoreWeek(analysisRequestId, query, dates) {
             });
         }
     }
-    return sentimentEngine.analyzeRedditPosts(analysisRequestId, postsForEngine);
+    await sentimentEngine.analyzePosts(analysisRequestId, 'reddit', postsForEngine);
+    sentimentEngine.allPostsSent(analysisRequestId, 'reddit');
 }
 
 module.exports = { search, scoreWeek };

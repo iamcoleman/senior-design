@@ -41,15 +41,16 @@ async function scoreDateByTag(analysisRequestId, tag, date, dayAfter) {
         }
     }
 
-    return sentimentEngine.analyzeTumblrPosts(analysisRequestId, postsForEngine);
+    return sentimentEngine.analyzePosts(analysisRequestId, 'tumblr', postsForEngine);
 }
 
-function scoreWeekByTag(analysisRequestId, tag, dates) {
+async function scoreWeekByTag(analysisRequestId, tag, dates) {
     const analysisPromises = [];
     for(let i = 0; i < 7; i++) {
         analysisPromises.push(scoreDateByTag(analysisRequestId, tag, dates[i], dates[i + 1]));
     }
-    return Promise.all(analysisPromises);
+    await Promise.all(analysisPromises);
+    sentimentEngine.allPostsSent(analysisRequestId, 'tumblr');
 }
 
 module.exports = { searchTag, scoreWeekByTag };

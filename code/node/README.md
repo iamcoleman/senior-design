@@ -10,42 +10,70 @@ To run with a production build of the front end, run `npm run build` in `code/si
 
 ### Sentiment
 
-**Origin**: Front end
+Start the sentiment analysis associated with a query over the past week and retrieve associated hashtags and the date range.
 
-Find the sentiment associated with a query over the past week. Scores range from 0 to 100. Dates are all GMT.
-
-    GET /api/sentiment/query/:query
+    POST /api/sentiment/query/:query
 
 **Example response**:
 
     {
-        "dates": ["2020-01-18", "2020-01-19", ..., "2020-01-24"],
+        "analysisRequestId": 175,
         "hashtags": ["Thanksgiving", "auspol", ..., "Iran"],
-        "scores": {
-            "twitter": [68, 65, 58, 59, 67, 61, 62],
-            "reddit": [54, 49, 55, 60, 58, 64, 68]
-        }
-    }
-
-**Example error response**:
-
-    {
-        "message": "Sentiment analysis did not complete"
+        "dates": ["2020-01-18", "2020-01-19", ..., "2020-01-24"]
     }
 
 ### Results
 
-**Origin**: Sentiment analysis engine API
+Get the results of a sentiment analysis job. Scores range from 0 to 100. Dates are all GMT.
 
-Send the results of a sentiment analysis. Throws a `404 GONE` error if the job ID is invalid, which will occur if the request
-has expired or was never created.
+    GET /api/results/:analysisRequestId
 
-    POST /api/results/:analysisRequestId
-
-**Example request body**: TBD
-
-**Example error response**:
+**Example response**:
 
     {
-        "message": "Request not found"
+        "twitter": [
+            {
+                "score": 49.7,
+                "count": 10,
+                "lowAverage": 34.95,
+                "highAverage": 64.45
+            },
+            ...
+            {
+                "score": 45.875,
+                "count": 8,
+                "lowAverage": 33.5625,
+                "highAverage": 58.1875
+            }
+        ],
+        "reddit": [
+            {
+                "score": 58.111111111111114,
+                "count": 9,
+                "lowAverage": 46.68055555555556,
+                "highAverage": 67.25555555555556
+            },
+            ...
+            {
+                "score": 53.5,
+                "count": 2,
+                "lowAverage": 53.25,
+                "highAverage": 53.75
+            }
+        ],
+        "tumblr": [
+            {
+                "score": 45.125,
+                "count": 8,
+                "lowAverage": 42.25,
+                "highAverage": 67.25
+            },
+            ...
+            {
+                "score": 51.5,
+                "count": 4,
+                "lowAverage": 50.25,
+                "highAverage": 52.75
+            }
+        ]
     }

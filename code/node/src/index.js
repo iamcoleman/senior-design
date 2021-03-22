@@ -6,20 +6,13 @@ const reddit = require('./platform/reddit');
 const tumblr = require('./platform/tumblr');
 const sentimentEngine = require('./sentimentEngine');
 
-const HTTP_STATUS = {
-    NOT_FOUND: 404,
-    SERVER_ERROR: 500
-}
-
 const app = express();
-const { port, requestExpirationMillis } = config;
+const { port } = config;
 
 app.use(express.json());
 app.use(express.static('public'));
 
-const activeJobs = {};
-
-app.get('/api/sentiment/query/:query', async (req, res) => {
+app.post('/api/sentiment/query/:query', async (req, res) => {
     const { query } = req.params;
     const jobPromise = sentimentEngine.createJob(query);
 
@@ -32,41 +25,19 @@ app.get('/api/sentiment/query/:query', async (req, res) => {
     }
 
     const analysisRequestId = await jobPromise;
-    console.log(analysisRequestId);
 
-    let tumblrPromise = null;
     if(query.charAt(0) === '#') {
-        tumblrPromise = tumblr.scoreWeekByTag(analysisRequestId, query.slice(1), dates);
+        tumblr.scoreWeekByTag(analysisRequestId, query.slice(1), dates);
     }
-    const redditPromise = reddit.scoreWeek(analysisRequestId, query, dates);
+    reddit.scoreWeek(analysisRequestId, query, dates);
     const hashtags = await twitter.scoreWeek(analysisRequestId, query, dates);
-    await tumblrPromise;
-    await redditPromise;
-    activeJobs[analysisRequestId] = { res, hashtags, dates };
-    sentimentEngine.completeJob(analysisRequestId);
-    setTimeout(() => {
-        const job = activeJobs[analysisRequestId];
-        if(job !== undefined) {
-            job.res.status(HTTP_STATUS.SERVER_ERROR).send({
-                message: 'Sentiment analysis did not complete'
-            });
-        }
-    }, requestExpirationMillis);
+    res.send({ analysisRequestId, hashtags, dates });
 });
 
-app.post('/api/results/:analysisRequestId', async (req, res) => {
+app.get('/api/results/:analysisRequestId', async (req, res) => {
     const { analysisRequestId } = req.params;
-    const job = activeJobs[analysisRequestId];
-    if(job === undefined) {
-        return res.status(HTTP_STATUS.NOT_FOUND).send({
-            message: 'Request not found'
-        });
-    }
-    res.send();
-    const { hashtags, dates } = job;
-    const scores = req.body;
-    job.res.send({ dates, hashtags, scores });
-    delete activeJobs[analysisRequestId];
+    const response = await sentimentEngine.getResults(analysisRequestId);
+    res.status(response.code).send(response.body);
 });
 
 app.listen(port, () => {
