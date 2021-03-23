@@ -10,6 +10,7 @@ from engine_api.engine.models import TextTwitter, TextReddit, TextTumblr
 
 # celery tasks
 from engine_api.tasks.workers import make_file, get_analysis_by_id
+from engine_api.tasks.workers import perform_twitter_analysis, perform_reddit_analysis, perform_tumblr_analysis
 import os
 
 
@@ -19,6 +20,23 @@ blueprint = Blueprint('engine', __name__, url_prefix='/engine')
 @blueprint.route('/test', methods=['GET'])
 def test():
     return 'It works!'
+
+
+@blueprint.route('/test2', methods=['POST'])
+def test2():
+    perform_twitter_analysis.delay(11)
+
+    return 'Ok'
+
+
+@blueprint.route('/test3', methods=['GET'])
+def test3():
+    analysis_results = AnalysisResults.query.filter_by(analysis_request_id=11)
+    # analysis_results.update({'twitter_analysis_complete': False})
+    analysis_results.update({'tumblr_analysis_complete': True, 'reddit_analysis_complete': True})
+    db.session.commit()
+
+    return 'Ok'
 
 
 @blueprint.route('/celery/<string:fname>/<string:content>')
@@ -105,6 +123,8 @@ def create_analysis_request():
         properties:
           analysis_request_id:
             type: number
+          analysis_results_id:
+            type: number
     responses:
       200:
         description: The ID of the newly created Analysis Request
@@ -123,7 +143,8 @@ def create_analysis_request():
 
     # build the response
     response = {
-        'analysis_request_id': analysis_request.id
+        'analysis_request_id': analysis_request.id,
+        'analysis_results_id': analysis_results.id,
     }
 
     return jsonify(response)
@@ -296,8 +317,13 @@ def begin_tweet_analysis():
       200:
         description: Confirmation that the sentiment analysis has begun on the Tweets for the specified Analysis Request
     """
-    # TODO: fill in
-    pass
+    # get the JSON data from the request
+    data = request.json
+
+    # start the Twitter analysis Celery task
+    perform_twitter_analysis.delay(data['analysis_request_id'])
+
+    return make_response(jsonify(success=True), 200)
 
 
 """
@@ -387,8 +413,13 @@ def begin_reddit_analysis():
       200:
         description: Confirmation that the sentiment analysis has begun on the Reddit posts/comments for the specified Analysis Request
     """
-    # TODO: fill in
-    pass
+    # get the JSON data from the request
+    data = request.json
+
+    # start the Reddit analysis Celery task
+    perform_reddit_analysis.delay(data['analysis_request_id'])
+
+    return make_response(jsonify(success=True), 200)
 
 
 """
@@ -478,5 +509,118 @@ def begin_tumblr_analysis():
       200:
         description: Confirmation that the sentiment analysis has begun on the Tumblr posts/comments for the specified Analysis Request
     """
-    # TODO: fill in
-    pass
+    # get the JSON data from the request
+    data = request.json
+
+    # start the Tumblr analysis Celery task
+    perform_tumblr_analysis.delay(data['analysis_request_id'])
+
+    return make_response(jsonify(success=True), 200)
+
+
+"""
+
+ANALYSIS RESULTS ENDPOINTS
+
+"""
+
+
+@blueprint.route('/analysis-request/<analysis_request_id>/status', methods=['GET'])
+def check_analysis_status(analysis_request_id):
+    """
+    Check the status of an Analysis Request
+    ---
+    parameters:
+      - name: analysis_request_id
+        in: path
+        description: The ID of the Analysis Request to check status of
+        required: true
+        type: number
+    definitions:
+      AnalysisRequestStatusResponse:
+        type: object
+        properties:
+          status:
+            type: string
+            enum: [CREATED, LOADING_DATA, ANALYZING, READY, FAILURE]
+    responses:
+      200:
+        description: Status of the Analysis Request
+        schema:
+          $ref: '#/definitions/AnalysisRequestStatusResponse'
+    """
+    analysis_request = AnalysisRequest.query.filter_by(analysis_request_id=analysis_request_id).first()
+
+    return make_response(jsonify(status=analysis_request.get_status), 200)
+
+
+@blueprint.route('/analysis-request/<analysis_request_id>/results', methods=['GET'])
+def get_results(analysis_request_id):
+    """
+    Get the results for an Analysis Request
+    ---
+    parameters:
+      - name: analysis_request_id
+        in: path
+        description: The ID of the Analysis Request to get the results for
+        required: true
+        type: number
+    definitions:
+      AnalysisRequestResultsResponse:
+        type: object
+        properties:
+          analysis_request_id:
+            type: number
+          id:
+            type: number
+          reddit_analysis_complete:
+            type: boolean
+          reddit_average:
+            type: number
+          reddit_lower_quartile:
+            type: number
+          reddit_maximum:
+            type: number
+          reddit_median:
+            type: number
+          reddit_minimum:
+            type: number
+          reddit_upper_quartile:
+            type: number
+          tumblr_analysis_complete:
+            type: boolean
+          tumblr_average:
+            type: number
+          tumblr_lower_quartile:
+            type: number
+          tumblr_maximum:
+            type: number
+          tumblr_median:
+            type: number
+          tumblr_minimum:
+            type: number
+          tumblr_upper_quartile:
+            type: number
+          twitter_analysis_complete:
+            type: boolean
+          twitter_average:
+            type: number
+          twitter_lower_quartile:
+            type: number
+          twitter_maximum:
+            type: number
+          twitter_median:
+            type: number
+          twitter_minimum:
+            type: number
+          twitter_upper_quartile:
+            type: number
+    responses:
+      200:
+        description: Results for the Analysis Request
+        schema:
+          $ref: '#/definitions/AnalysisRequestResultsResponse'
+    """
+    analysis_results = AnalysisResults.query.filter_by(analysis_request_id=analysis_request_id).first()
+
+    return make_response(jsonify(analysis_results.serialize), 200)
