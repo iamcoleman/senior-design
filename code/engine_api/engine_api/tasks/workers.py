@@ -1,3 +1,5 @@
+from itertools import groupby
+
 # Celery import
 from engine_api import celery as celery_app
 
@@ -52,8 +54,8 @@ def check_analysis_complete(analysis_request_id):
     :param analysis_request_id: Analysis Request to check on
     :return:
     """
-    analysis_results = AnalysisResults.query.filter_by(analysis_request_id=analysis_request_id).first()
-    if analysis_results.analysis_complete:
+    analysis_request = AnalysisRequest.query.filter_by(id=analysis_request_id).first()
+    if analysis_request.analysis_complete:
         AnalysisRequest.query.filter_by(id=analysis_request_id).update({'status': StatusEnum.READY})
         db.session.commit()
 
@@ -65,46 +67,72 @@ def perform_twitter_analysis(analysis_request_id):
     :param analysis_request_id: Analysis Request to perform the analysis of Tweets for
     :return:
     """
-    # get the text for all Tweets
+    # get all Tweets
     tweets = TextTwitter.query.filter_by(analysis_request_id=analysis_request_id).all()
-    text_list = []
-    for tweet in tweets:
-        text_list.append(tweet.serialize['text'])
+    if len(tweets) == 0:
+        # if there are no Tweets, mark Twitter analysis complete and return
+        AnalysisRequest.query.filter_by(id=analysis_request_id).update({'twitter_analysis_complete': True})
+        db.session.commit()
+        # check to see if all analysis has been completed
+        check_analysis_complete(analysis_request_id)
+        return
 
-    # reshape input text and classify tweet
-    positive_values = []
-    for text in text_list:
-        tweet_emb = np.array([tf.reshape(embed(text), [-1]).numpy()])
-        y_pred = loaded_model.predict(tweet_emb)
-        positive_value = y_pred[0][1]
-        positive_values.append(positive_value)
+    # group the Tweets by their date
+    def key_func(k):
+        return k.get_date
+    sorted_tweets = sorted(tweets, key=key_func) # sort Tweets to be used with itertools.groupby
+    grouped_tweets = []
+    grouped_days = []
+    for k, v in groupby(sorted_tweets, key=lambda x: x.get_date):
+        grouped_days.append(k)
+        grouped_tweets.append(list(v))
 
-    # get the result values
-    median = np.median(positive_values)
-    average = np.average(positive_values)
-    upper_quartile = np.percentile(positive_values, 75)
-    lower_quartile = np.percentile(positive_values, 25)
-    min_value = min(positive_values)
-    max_value = max(positive_values)
-    analysis_values = {
-        'twitter_median': median.item(),
-        'twitter_average': average.item(),
-        'twitter_lower_quartile': lower_quartile.item(),
-        'twitter_upper_quartile': upper_quartile.item(),
-        'twitter_minimum': min_value.item(),
-        'twitter_maximum': max_value.item()
-    }
+    # do analysis for every day
+    for i in range(len(grouped_days)):
+        # get the text of the Tweets
+        text_list = []
+        for tweet in grouped_tweets[i]:
+            text_list.append(tweet.serialize['text'])
 
-    # update values in AnalysisResults table
-    AnalysisResults.query.filter_by(analysis_request_id=analysis_request_id).update(analysis_values)
-    AnalysisResults.query.filter_by(analysis_request_id=analysis_request_id).update({'twitter_analysis_complete': True})
+        # reshape input text and classify tweet
+        positive_values = []
+        for text in text_list:
+            tweet_emb = np.array([tf.reshape(embed(text), [-1]).numpy()])
+            y_pred = loaded_model.predict(tweet_emb)
+            positive_value = y_pred[0][1]
+            positive_values.append(positive_value)
+
+        # get the result values
+        median = np.median(positive_values)
+        average = np.average(positive_values)
+        upper_quartile = np.percentile(positive_values, 75)
+        lower_quartile = np.percentile(positive_values, 25)
+        min_value = min(positive_values)
+        max_value = max(positive_values)
+        analysis_values = {
+            'twitter_median': median.item(),
+            'twitter_average': average.item(),
+            'twitter_lower_quartile': lower_quartile.item(),
+            'twitter_upper_quartile': upper_quartile.item(),
+            'twitter_minimum': min_value.item(),
+            'twitter_maximum': max_value.item()
+        }
+
+        # get the AnalysisResults for the day
+        exists = AnalysisResults.query.filter_by(analysis_request_id=analysis_request_id, result_day=grouped_days[i]).first() is not None
+        if exists:
+            AnalysisResults.query.filter_by(analysis_request_id=analysis_request_id, result_day=grouped_days[i]).update(analysis_values)
+            db.session.commit()
+        else:
+            AnalysisResults.create(analysis_request_id=analysis_request_id, result_day=grouped_days[i])
+            AnalysisResults.query.filter_by(analysis_request_id=analysis_request_id, result_day=grouped_days[i]).update(analysis_values)
+            db.session.commit()
+
+    # Set the 'twitter_analysis_complete' to True here
+    AnalysisRequest.query.filter_by(id=analysis_request_id).update({'twitter_analysis_complete': True})
     db.session.commit()
 
-    # set all Tweets to analyzed
-    TextTwitter.query.filter_by(analysis_request_id=analysis_request_id).update({'is_analyzed': True})
-    db.session.commit()
-
-    # check to see if all analysis has been completed
+    # Then check to see if all analysis has been complete here
     check_analysis_complete(analysis_request_id)
 
 
@@ -115,46 +143,72 @@ def perform_reddit_analysis(analysis_request_id):
     :param analysis_request_id: Analysis Request to perform the analysis of Reddit posts for
     :return:
     """
-    # get the text for all Reddit posts
+    # get all Reddit posts
     posts = TextReddit.query.filter_by(analysis_request_id=analysis_request_id).all()
-    text_list = []
-    for post in posts:
-        text_list.append(post.serialize['text'])
+    if len(posts) == 0:
+        # if there are no Reddit posts, mark Reddit analysis complete and return
+        AnalysisRequest.query.filter_by(id=analysis_request_id).update({'reddit_analysis_complete': True})
+        db.session.commit()
+        # check to see if all analysis has been completed
+        check_analysis_complete(analysis_request_id)
+        return
 
-    # reshape input text and classify post
-    positive_values = []
-    for text in text_list:
-        post_emb = np.array([tf.reshape(embed(text), [-1]).numpy()])
-        y_pred = loaded_model.predict(post_emb)
-        positive_value = y_pred[0][1]
-        positive_values.append(positive_value)
+    # group the Reddit posts by their date
+    def key_func(k):
+        return k.get_date
+    sorted_posts = sorted(posts, key=key_func) # sort Reddit posts to be used with itertools.groupby
+    grouped_posts = []
+    grouped_days = []
+    for k, v in groupby(sorted_posts, key=lambda x: x.get_date):
+        grouped_days.append(k)
+        grouped_posts.append(list(v))
 
-    # get the result values
-    median = np.median(positive_values)
-    average = np.average(positive_values)
-    upper_quartile = np.percentile(positive_values, 75)
-    lower_quartile = np.percentile(positive_values, 25)
-    min_value = min(positive_values)
-    max_value = max(positive_values)
-    analysis_values = {
-        'reddit_median': median.item(),
-        'reddit_average': average.item(),
-        'reddit_lower_quartile': lower_quartile.item(),
-        'reddit_upper_quartile': upper_quartile.item(),
-        'reddit_minimum': min_value.item(),
-        'reddit_maximum': max_value.item()
-    }
+    # do analysis for every day
+    for i in range(len(grouped_days)):
+        # get the text of the Reddit posts
+        text_list = []
+        for post in grouped_posts[i]:
+            text_list.append(post.serialize['text'])
 
-    # update values in AnalysisResults table
-    AnalysisResults.query.filter_by(analysis_request_id=analysis_request_id).update(analysis_values)
-    AnalysisResults.query.filter_by(analysis_request_id=analysis_request_id).update({'reddit_analysis_complete': True})
+        # reshape input text and classify Reddit post
+        positive_values = []
+        for text in text_list:
+            post_emb = np.array([tf.reshape(embed(text), [-1]).numpy()])
+            y_pred = loaded_model.predict(post_emb)
+            positive_value = y_pred[0][1]
+            positive_values.append(positive_value)
+
+        # get the result values
+        median = np.median(positive_values)
+        average = np.average(positive_values)
+        upper_quartile = np.percentile(positive_values, 75)
+        lower_quartile = np.percentile(positive_values, 25)
+        min_value = min(positive_values)
+        max_value = max(positive_values)
+        analysis_values = {
+            'reddit_median': median.item(),
+            'reddit_average': average.item(),
+            'reddit_lower_quartile': lower_quartile.item(),
+            'reddit_upper_quartile': upper_quartile.item(),
+            'reddit_minimum': min_value.item(),
+            'reddit_maximum': max_value.item()
+        }
+
+        # get the AnalysisResults for the day
+        exists = AnalysisResults.query.filter_by(analysis_request_id=analysis_request_id, result_day=grouped_days[i]).first() is not None
+        if exists:
+            AnalysisResults.query.filter_by(analysis_request_id=analysis_request_id, result_day=grouped_days[i]).update(analysis_values)
+            db.session.commit()
+        else:
+            AnalysisResults.create(analysis_request_id=analysis_request_id, result_day=grouped_days[i])
+            AnalysisResults.query.filter_by(analysis_request_id=analysis_request_id, result_day=grouped_days[i]).update(analysis_values)
+            db.session.commit()
+
+    # Set the 'reddit_analysis_complete' to True here
+    AnalysisRequest.query.filter_by(id=analysis_request_id).update({'reddit_analysis_complete': True})
     db.session.commit()
 
-    # set all Reddit posts to analyzed
-    TextReddit.query.filter_by(analysis_request_id=analysis_request_id).update({'is_analyzed': True})
-    db.session.commit()
-
-    # check to see if all analysis has been completed
+    # Then check to see if all analysis has been complete here
     check_analysis_complete(analysis_request_id)
 
 
@@ -165,44 +219,70 @@ def perform_tumblr_analysis(analysis_request_id):
     :param analysis_request_id: Analysis Request to perform the analysis of Tumblr posts for
     :return:
     """
-    # get the text for all Tumblr posts
+    # get all Tumblr posts
     posts = TextTumblr.query.filter_by(analysis_request_id=analysis_request_id).all()
-    text_list = []
-    for post in posts:
-        text_list.append(post.serialize['text'])
+    if len(posts) == 0:
+        # if there are no Tumblr posts, mark Tumblr analysis complete and return
+        AnalysisRequest.query.filter_by(id=analysis_request_id).update({'tumblr_analysis_complete': True})
+        db.session.commit()
+        # check to see if all analysis has been completed
+        check_analysis_complete(analysis_request_id)
+        return
 
-    # reshape input text and classify post
-    positive_values = []
-    for text in text_list:
-        post_emb = np.array([tf.reshape(embed(text), [-1]).numpy()])
-        y_pred = loaded_model.predict(post_emb)
-        positive_value = y_pred[0][1]
-        positive_values.append(positive_value)
+    # group the Tumblr posts by their date
+    def key_func(k):
+        return k.get_date
+    sorted_posts = sorted(posts, key=key_func) # sort Tumblr posts to be used with itertools.groupby
+    grouped_posts = []
+    grouped_days = []
+    for k, v in groupby(sorted_posts, key=lambda x: x.get_date):
+        grouped_days.append(k)
+        grouped_posts.append(list(v))
 
-    # get the result values
-    median = np.median(positive_values)
-    average = np.average(positive_values)
-    upper_quartile = np.percentile(positive_values, 75)
-    lower_quartile = np.percentile(positive_values, 25)
-    min_value = min(positive_values)
-    max_value = max(positive_values)
-    analysis_values = {
-        'tumblr_median': median.item(),
-        'tumblr_average': average.item(),
-        'tumblr_lower_quartile': lower_quartile.item(),
-        'tumblr_upper_quartile': upper_quartile.item(),
-        'tumblr_minimum': min_value.item(),
-        'tumblr_maximum': max_value.item()
-    }
+    # do analysis for every day
+    for i in range(len(grouped_days)):
+        # get the text of the Tumblr posts
+        text_list = []
+        for post in grouped_posts[i]:
+            text_list.append(post.serialize['text'])
 
-    # update values in AnalysisResults table
-    AnalysisResults.query.filter_by(analysis_request_id=analysis_request_id).update(analysis_values)
-    AnalysisResults.query.filter_by(analysis_request_id=analysis_request_id).update({'tumblr_analysis_complete': True})
+        # reshape input text and classify Tumblr post
+        positive_values = []
+        for text in text_list:
+            post_emb = np.array([tf.reshape(embed(text), [-1]).numpy()])
+            y_pred = loaded_model.predict(post_emb)
+            positive_value = y_pred[0][1]
+            positive_values.append(positive_value)
+
+        # get the result values
+        median = np.median(positive_values)
+        average = np.average(positive_values)
+        upper_quartile = np.percentile(positive_values, 75)
+        lower_quartile = np.percentile(positive_values, 25)
+        min_value = min(positive_values)
+        max_value = max(positive_values)
+        analysis_values = {
+            'tumblr_median': median.item(),
+            'tumblr_average': average.item(),
+            'tumblr_lower_quartile': lower_quartile.item(),
+            'tumblr_upper_quartile': upper_quartile.item(),
+            'tumblr_minimum': min_value.item(),
+            'tumblr_maximum': max_value.item()
+        }
+
+        # get the AnalysisResults for the day
+        exists = AnalysisResults.query.filter_by(analysis_request_id=analysis_request_id, result_day=grouped_days[i]).first() is not None
+        if exists:
+            AnalysisResults.query.filter_by(analysis_request_id=analysis_request_id, result_day=grouped_days[i]).update(analysis_values)
+            db.session.commit()
+        else:
+            AnalysisResults.create(analysis_request_id=analysis_request_id, result_day=grouped_days[i])
+            AnalysisResults.query.filter_by(analysis_request_id=analysis_request_id, result_day=grouped_days[i]).update(analysis_values)
+            db.session.commit()
+
+    # Set the 'reddit_analysis_complete' to True here
+    AnalysisRequest.query.filter_by(id=analysis_request_id).update({'tumblr_analysis_complete': True})
     db.session.commit()
 
-    # set all Tumblr posts to analyzed
-    TextTumblr.query.filter_by(analysis_request_id=analysis_request_id).update({'is_analyzed': True})
-    db.session.commit()
-
-    # check to see if all analysis has been completed
+    # Then check to see if all analysis has been complete here
     check_analysis_complete(analysis_request_id)
