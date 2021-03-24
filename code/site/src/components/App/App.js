@@ -54,8 +54,8 @@ function App() {
             }
             score += inputPoint.score * inputPoint.count;
             count += inputPoint.count;
-            lowTotal += inputPoint.lowAverage * inputPoint.count;
-            highTotal += inputPoint.highAverage * inputPoint.count;
+            lowTotal += inputPoint.lowerQuartile * inputPoint.count;
+            highTotal += inputPoint.upperQuartile * inputPoint.count;
           }
           if(count === 0) {
             dataset.push({ count });
@@ -63,8 +63,8 @@ function App() {
             dataset.push({
               score: score / count,
               count,
-              lowAverage: lowTotal / count,
-              highAverage: highTotal / count
+              lowerQuartile: lowTotal / count,
+              upperQuartile: highTotal / count
             });
           }
         }
@@ -94,7 +94,7 @@ function App() {
           <TagDisplay hashtags={data.hashtags} searchTag={searchTag} />
           <select value={display} onChange={(e) => setDisplay(e.target.value)}>
             <option value="all">All</option>
-            <option value="average">Average</option>
+            {/* <option value="average">Average</option> */}
             {datasetNames.map((datasetName) => (
               <option value={datasetName}>
                 {datasetName.charAt(0).toUpperCase()}

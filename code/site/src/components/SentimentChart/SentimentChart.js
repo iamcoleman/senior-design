@@ -23,15 +23,15 @@ function SentimentChart(props) {
       fill: false
     };
     const lowerBoundDataset = {
-      label: `${upperName} low average`,
-      data: rawDataset.map((datapoint) => datapoint.lowAverage),
+      label: `${upperName} lower quartile`,
+      data: rawDataset.map((datapoint) => datapoint.lowerQuartile),
       borderColor: 'transparent',
       pointRadius: 0,
       fill: i,
     };
     const upperBoundDataset = {
-      label: `${upperName} high average`,
-      data: rawDataset.map((datapoint) => datapoint.highAverage),
+      label: `${upperName} upper quartile`,
+      data: rawDataset.map((datapoint) => datapoint.upperQuartile),
       borderColor: 'transparent',
       pointRadius: 0,
       fill: i,
@@ -81,7 +81,7 @@ function SentimentChart(props) {
         },
         legend: {
           labels: {
-            filter: (item) => !item.text.includes(' average')
+            filter: (item) => !item.text.includes(' quartile')
           }
         },
         tooltips: {
@@ -95,10 +95,10 @@ function SentimentChart(props) {
               }
               return `${dataset.label} score: ${score}`;
             },
-            afterLabel: (tooltipItem) => {
-              const rawDataset = rawDatasets[tooltipItem.datasetIndex / 3];
-              return `Analyzed ${rawDataset[tooltipItem.index].count} posts`;
-            }
+            // afterLabel: (tooltipItem) => {
+            //   const rawDataset = rawDatasets[tooltipItem.datasetIndex / 3];
+            //   return `Analyzed ${rawDataset[tooltipItem.index].count} posts`;
+            // }
           }
         }
       }} />

@@ -50,7 +50,7 @@ async function scoreWeekByTag(analysisRequestId, tag, dates) {
         analysisPromises.push(scoreDateByTag(analysisRequestId, tag, dates[i], dates[i + 1]));
     }
     await Promise.all(analysisPromises);
-    sentimentEngine.allPostsSent(analysisRequestId, 'tumblr');
+    await sentimentEngine.allPostsSent(analysisRequestId, 'tumblr');
 }
 
 module.exports = { searchTag, scoreWeekByTag };

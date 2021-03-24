@@ -42,7 +42,7 @@ async function scoreDate(analysisRequestId, query, date, dayAfter) {
         }
         postsForEngine.push({
             created_at: date,
-            text: status.text
+            text: status.text.replace(/\shttps?:\/\/\S+$/, '')
         });
         for(tag of status.entities.hashtags) {
             hashtags.add(tag.text);
@@ -68,9 +68,7 @@ async function scoreWeek(analysisRequestId, query, dates) {
             }
         }
     }
-    Promise.all(analysisPromises).then(() => {
-        sentimentEngine.allPostsSent(analysisRequestId, 'tweets');
-    });
+    Promise.all(analysisPromises).then(() => sentimentEngine.allPostsSent(analysisRequestId, 'tweets'));
     return hashtags
 }
 

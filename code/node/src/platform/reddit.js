@@ -60,7 +60,7 @@ async function scoreWeek(analysisRequestId, query, dates) {
         }
     }
     await sentimentEngine.analyzePosts(analysisRequestId, 'reddit', postsForEngine);
-    sentimentEngine.allPostsSent(analysisRequestId, 'reddit');
+    await sentimentEngine.allPostsSent(analysisRequestId, 'reddit');
 }
 
 module.exports = { search, scoreWeek };
