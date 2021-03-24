@@ -549,7 +549,7 @@ def check_analysis_status(analysis_request_id):
         schema:
           $ref: '#/definitions/AnalysisRequestStatusResponse'
     """
-    analysis_request = AnalysisRequest.query.filter_by(analysis_request_id=analysis_request_id).first()
+    analysis_request = AnalysisRequest.query.filter_by(id=analysis_request_id).first()
 
     return make_response(jsonify(status=analysis_request.get_status), 200)
 
