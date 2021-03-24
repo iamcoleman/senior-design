@@ -33,10 +33,16 @@ class AnalysisRequest(PkModel):
     keywords = Column(db.Text, nullable=False)  # TODO: using 'Text' type, once we implement a limit it can be switched to 'String()' type
     opened_at = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
     status = Column(db.Enum(StatusEnum), nullable=False, default=StatusEnum.CREATED)
+    # analysis complete
+    twitter_analysis_complete = Column(db.Boolean, nullable=False, default=False)
+    reddit_analysis_complete = Column(db.Boolean, nullable=False, default=False)
+    tumblr_analysis_complete = Column(db.Boolean, nullable=False, default=False)
+    # Text tables
     text_twitter = relationship("TextTwitter", back_populates="analysis_request")
     text_reddit = relationship("TextReddit", back_populates="analysis_request")
     text_tumblr = relationship("TextTumblr", back_populates="analysis_request")
-    analysis_results = relationship("AnalysisResults", uselist=False, back_populates="analysis_request")
+    # AnalysisResults
+    analysis_results = relationship("AnalysisResults", back_populates="analysis_request")
 
     def __init__(self, keywords, **kwargs):
         """Create instance."""
@@ -49,13 +55,23 @@ class AnalysisRequest(PkModel):
             'id': self.id,
             'keywords': self.keywords,
             'opened_at': self.opened_at.isoformat(),
-            'status': status_enum_to_string(self.status)
+            'status': status_enum_to_string(self.status),
+            'twitter_analysis_complete': self.twitter_analysis_complete,
+            'reddit_analysis_complete': self.reddit_analysis_complete,
+            'tumblr_analysis_complete': self.tumblr_analysis_complete,
         }
 
     @property
     def get_status(self):
         """Current status of request as a string"""
         return status_enum_to_string(self.status)
+
+    @property
+    def analysis_complete(self):
+        """True if Twitter, Reddit, and Tumblr analysis is complete, else false"""
+        return self.twitter_analysis_complete and \
+               self.reddit_analysis_complete and \
+               self.tumblr_analysis_complete
 
     def __repr__(self):
         """Represent instance as a unique string."""
@@ -90,6 +106,11 @@ class TextTwitter(PkModel):
             'text': self.text,
             'is_analyzed': self.is_analyzed
         }
+
+    @property
+    def get_date(self):
+        """Return the Python Date object for the 'created_at' value"""
+        return self.created_at.date()
 
     def __repr__(self):
         """Represent instance as a unique string."""
@@ -170,9 +191,7 @@ class AnalysisResults(PkModel):
     __tablename__ = "analysis_results"
     analysis_request_id = Column(db.Integer, db.ForeignKey("analysis_request.id"), nullable=False)
     analysis_request = relationship("AnalysisRequest", back_populates="analysis_results")
-    twitter_analysis_complete = Column(db.Boolean, nullable=False, default=False)
-    reddit_analysis_complete = Column(db.Boolean, nullable=False, default=False)
-    tumblr_analysis_complete = Column(db.Boolean, nullable=False, default=False)
+    result_day = Column(db.Date)
     # Twitter Result Values
     twitter_median = Column(db.Float(precision=32), nullable=True)
     twitter_average = Column(db.Float(precision=32), nullable=True)
@@ -195,9 +214,10 @@ class AnalysisResults(PkModel):
     tumblr_minimum = Column(db.Float(precision=32), nullable=True)
     tumblr_maximum = Column(db.Float(precision=32), nullable=True)
 
-    def __init__(self, analysis_request_id, **kwargs):
+    def __init__(self, analysis_request_id, result_day, **kwargs):
         super().__init__(
             analysis_request_id=analysis_request_id,
+            result_day=result_day,
             **kwargs
         )
 
@@ -207,9 +227,7 @@ class AnalysisResults(PkModel):
         return {
             'id': self.id,
             'analysis_request_id': self.analysis_request_id,
-            'twitter_analysis_complete': self.twitter_analysis_complete,
-            'reddit_analysis_complete': self.reddit_analysis_complete,
-            'tumblr_analysis_complete': self.tumblr_analysis_complete,
+            'result_day': self.result_day.isoformat(),
             'twitter_median': self.twitter_median,
             'twitter_average': self.twitter_average,
             'twitter_lower_quartile': self.twitter_lower_quartile,
@@ -229,13 +247,6 @@ class AnalysisResults(PkModel):
             'tumblr_minimum': self.tumblr_minimum,
             'tumblr_maximum': self.tumblr_maximum
         }
-
-    @property
-    def analysis_complete(self):
-        """True if Twitter, Reddit, and Tumblr analysis is complete, else false"""
-        return self.twitter_analysis_complete and \
-               self.reddit_analysis_complete and \
-               self.tumblr_analysis_complete
 
     def __repr__(self):
         """Represent instance as a unique string"""

@@ -86,6 +86,12 @@ def get_analysis_request(id):
           status:
             type: string
             enum: [CREATED, LOADING_DATA, ANALYZING, READY, FAILURE]
+          reddit_analysis_complete:
+            type: boolean
+          tumblr_analysis_complete:
+            type: boolean
+          twitter_analysis_complete:
+            type: boolean
     responses:
       200:
         description: The Analysis Request object
@@ -123,8 +129,6 @@ def create_analysis_request():
         properties:
           analysis_request_id:
             type: number
-          analysis_results_id:
-            type: number
     responses:
       200:
         description: The ID of the newly created Analysis Request
@@ -138,13 +142,9 @@ def create_analysis_request():
     # create the Analysis Request
     analysis_request = AnalysisRequest.create(keywords=keywords)
 
-    # create the Analysis Results for the Analysis Request
-    analysis_results = AnalysisResults.create(analysis_request_id=analysis_request.id)
-
     # build the response
     response = {
-        'analysis_request_id': analysis_request.id,
-        'analysis_results_id': analysis_results.id,
+        'analysis_request_id': analysis_request.id
     }
 
     return jsonify(response)
@@ -566,61 +566,71 @@ def get_results(analysis_request_id):
         required: true
         type: number
     definitions:
-      AnalysisRequestResultsResponse:
+      AnalysisResultsResponse:
         type: object
         properties:
-          analysis_request_id:
-            type: number
-          id:
-            type: number
-          reddit_analysis_complete:
-            type: boolean
-          reddit_average:
-            type: number
-          reddit_lower_quartile:
-            type: number
-          reddit_maximum:
-            type: number
-          reddit_median:
-            type: number
-          reddit_minimum:
-            type: number
-          reddit_upper_quartile:
-            type: number
-          tumblr_analysis_complete:
-            type: boolean
-          tumblr_average:
-            type: number
-          tumblr_lower_quartile:
-            type: number
-          tumblr_maximum:
-            type: number
-          tumblr_median:
-            type: number
-          tumblr_minimum:
-            type: number
-          tumblr_upper_quartile:
-            type: number
-          twitter_analysis_complete:
-            type: boolean
-          twitter_average:
-            type: number
-          twitter_lower_quartile:
-            type: number
-          twitter_maximum:
-            type: number
-          twitter_median:
-            type: number
-          twitter_minimum:
-            type: number
-          twitter_upper_quartile:
-            type: number
+          results:
+            type: array
+            items:
+              type: object
+              properties:
+                analysis_request_id:
+                  type: number
+                id:
+                  type: number
+                result_day:
+                  type: string
+                reddit_analysis_complete:
+                  type: boolean
+                reddit_average:
+                  type: number
+                reddit_lower_quartile:
+                  type: number
+                reddit_maximum:
+                  type: number
+                reddit_median:
+                  type: number
+                reddit_minimum:
+                  type: number
+                reddit_upper_quartile:
+                  type: number
+                tumblr_analysis_complete:
+                  type: boolean
+                tumblr_average:
+                  type: number
+                tumblr_lower_quartile:
+                  type: number
+                tumblr_maximum:
+                  type: number
+                tumblr_median:
+                  type: number
+                tumblr_minimum:
+                  type: number
+                tumblr_upper_quartile:
+                  type: number
+                twitter_analysis_complete:
+                  type: boolean
+                twitter_average:
+                  type: number
+                twitter_lower_quartile:
+                  type: number
+                twitter_maximum:
+                  type: number
+                twitter_median:
+                  type: number
+                twitter_minimum:
+                  type: number
+                twitter_upper_quartile:
+                  type: number
     responses:
       200:
         description: Results for the Analysis Request
         schema:
-          $ref: '#/definitions/AnalysisRequestResultsResponse'
+          $ref: '#/definitions/AnalysisResultsResponse'
     """
-    analysis_results = AnalysisResults.query.filter_by(analysis_request_id=analysis_request_id).first()
+    analysis_results_list = AnalysisResults.query.filter_by(analysis_request_id=analysis_request_id).all()
+    res = []
+    for results in analysis_results_list:
+        res.append(results.serialize)
 
-    return make_response(jsonify(analysis_results.serialize), 200)
+    return make_response(jsonify(results=res), 200)
