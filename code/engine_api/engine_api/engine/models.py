@@ -145,6 +145,11 @@ class TextReddit(PkModel):
             'text': self.text,
             'is_analyzed': self.is_analyzed
         }
+    
+    @property
+    def get_date(self):
+        """Return the Python Date object for the 'created_at' value"""
+        return self.created_at.date()
 
     def __repr__(self):
         """Represent instance as a unique string."""
@@ -179,6 +184,11 @@ class TextTumblr(PkModel):
             'text': self.text,
             'is_analyzed': self.is_analyzed
         }
+    
+    @property
+    def get_date(self):
+        """Return the Python Date object for the 'created_at' value"""
+        return self.created_at.date()
 
     def __repr__(self):
         """Represent instance as a unique string."""
