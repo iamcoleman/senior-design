@@ -95,8 +95,8 @@ function App() {
           <select value={display} onChange={(e) => setDisplay(e.target.value)}>
             <option value="all">All</option>
             {/* <option value="average">Average</option> */}
-            {datasetNames.map((datasetName) => (
-              <option value={datasetName}>
+            {datasetNames.map((datasetName, i) => (
+              <option value={datasetName} key={i}>
                 {datasetName.charAt(0).toUpperCase()}
                 {datasetName.slice(1)}
               </option>))}

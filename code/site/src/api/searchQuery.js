@@ -12,7 +12,7 @@ async function getResults(analysisRequestId, resolve, reject) {
     }
 }
 
-export default async (query) => {
+export default async function searchQuery(query) {
     const analysisStartResponse = await fetch(`/api/sentiment/query/${encodeURIComponent(query)}`, {
         method: 'POST'
     });
