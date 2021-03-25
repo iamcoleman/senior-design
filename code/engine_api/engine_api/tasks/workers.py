@@ -27,11 +27,11 @@ tf.config.experimental.set_memory_growth(physical_devices[0], True)
 embed = hub.load('https://tfhub.dev/google/universal-sentence-encoder-multilingual/3')
 
 # load the custom neural network
-yaml_file = open('D:/_projects/senior-design/code/engine_api/engine_api/tasks/models/model.yaml', 'r')
+yaml_file = open('engine_api/tasks/models/model.yaml', 'r')
 loaded_model_yaml = yaml_file.read()
 yaml_file.close()
 loaded_model = model_from_yaml(loaded_model_yaml)
-loaded_model.load_weights('D:/_projects/senior-design/code/engine_api/engine_api/tasks/models/model.h5')
+loaded_model.load_weights('engine_api/tasks/models/model.h5')
 
 
 @celery_app.task()
