@@ -1,8 +1,7 @@
 const fetch = require('node-fetch');
 
-const analyzeSentiment = require('../helper/analyzeSentiment');
+const sentimentEngine = require('../sentimentEngine');
 const config = require('../../config');
-const computeDataPoint = require('../helper/computeDataPoint');
 const apiKey = config.tumblr.consumerKey;
 
 async function searchTag(tag, options) {
@@ -20,7 +19,7 @@ async function searchTag(tag, options) {
     return data.json();
 }
 
-async function scoreDateByTag(tag, date, dayAfter) {
+async function scoreDateByTag(analysisRequestId, tag, date, dayAfter) {
     const options = {
         count: 10
     };
@@ -28,26 +27,30 @@ async function scoreDateByTag(tag, date, dayAfter) {
         options.before = new Date(dayAfter).getTime() / 1000;
     }
     const posts = await searchTag(tag, options);
-    const scorePromises = [];
+    const postsForEngine = [];
     for(let response of posts.response) {
         const postDate = response.date.substring(0, 10);
         if(postDate !== date) {
             break;
         }
         if(response.body) {
-            scorePromises.push(analyzeSentiment(response.body));
+            postsForEngine.push({
+                created_at: postDate,
+                text: response.body
+            });
         }
     }
 
-    return computeDataPoint(await Promise.all(scorePromises));
+    return sentimentEngine.analyzePosts(analysisRequestId, 'tumblr', postsForEngine);
 }
 
-function scoreWeekByTag(tag, dates) {
-    const scorePromises = [];
+async function scoreWeekByTag(analysisRequestId, tag, dates) {
+    const analysisPromises = [];
     for(let i = 0; i < 7; i++) {
-        scorePromises.push(scoreDateByTag(tag, dates[i], dates[i + 1]));
+        analysisPromises.push(scoreDateByTag(analysisRequestId, tag, dates[i], dates[i + 1]));
     }
-    return Promise.all(scorePromises);
+    await Promise.all(analysisPromises);
+    await sentimentEngine.allPostsSent(analysisRequestId, 'tumblr');
 }
 
 module.exports = { searchTag, scoreWeekByTag };

@@ -14,7 +14,7 @@ function TagDisplay(props) {
       {
         hashtags.length === 0 ? 'None' : hashtags
           .map((tag, i) => <>
-            <button onClick={() => props.searchTag(tag)}>#{tag}</button>,{' '}
+            <button key={i} onClick={() => props.searchTag(tag)}>#{tag}</button>,{' '}
           </>)
       }
       {

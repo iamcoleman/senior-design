@@ -4,14 +4,18 @@ const config = require('../config');
 const twitter = require('./platform/twitter');
 const reddit = require('./platform/reddit');
 const tumblr = require('./platform/tumblr');
+const sentimentEngine = require('./sentimentEngine');
 
 const app = express();
-const port = config.port;
+const { port } = config;
 
-app.use(express.static('public'))
+app.use(express.json());
+app.use(express.static('public'));
 
-app.get('/api/sentiment/query/:query', async (req, res) => {
+app.post('/api/sentiment/query/:query', async (req, res) => {
     const { query } = req.params;
+    const jobPromise = sentimentEngine.createJob(query);
+
     const date = new Date();
     date.setDate(date.getDate() - 6);
     const dates = [date.toISOString().substring(0, 10)];
@@ -20,25 +24,60 @@ app.get('/api/sentiment/query/:query', async (req, res) => {
         dates.push(date.toISOString().substring(0, 10));
     }
 
-    let tumblrPromise = null;
-    if(query.charAt(0) === '#') {
-        tumblrPromise = tumblr.scoreWeekByTag(query.slice(1), dates);
-    }
-    const redditPromise = reddit.scoreWeek(query, dates);
-    const twitterResult = await twitter.scoreWeek(query, dates);
+    const analysisRequestId = await jobPromise;
 
-    const response = {
-        dates: dates,
-        hashtags: twitterResult.hashtags,
-        scores: {
-            twitter: twitterResult.scores,
-            reddit: await redditPromise,
-        }
-    };
-    if(tumblrPromise !== null) {
-        response.scores.tumblr = await tumblrPromise;
+    if(query.charAt(0) === '#') {
+        tumblr.scoreWeekByTag(analysisRequestId, query.slice(1), dates);
+    } else {
+        sentimentEngine.allPostsSent(analysisRequestId, 'tumblr');
     }
-    res.send(response);
+    reddit.scoreWeek(analysisRequestId, query, dates);
+    const hashtags = await twitter.scoreWeek(analysisRequestId, query, dates);
+    res.send({ analysisRequestId, hashtags });
+});
+
+const platforms = ['twitter', 'reddit', 'tumblr'];
+
+async function getResults(analysisRequestId) {
+    const results = await sentimentEngine.getResults(analysisRequestId);
+    results.sort((a, b) => a.result_day.localeCompare(b.result_day));
+    const dates = results.map((result) => result.result_day);
+    const scores = {};
+    for(const platform of platforms) {
+        let platformHasResults = false;
+        const platformScores = results.map((result) => {
+            if(result[`${platform}_median`] == null) {
+                return {};
+            }
+            platformHasResults = true;
+            return {
+                score: result[`${platform}_median`] * 100,
+                lowerQuartile: result[`${platform}_lower_quartile`] * 100,
+                upperQuartile: result[`${platform}_upper_quartile`] * 100
+            };
+        });
+        if(platformHasResults) {
+            scores[platform] = platformScores;
+        }
+    }
+    return { dates, scores };
+}
+
+app.get('/api/results/:analysisRequestId', async (req, res) => {
+    const { analysisRequestId } = req.params;
+    const status = await sentimentEngine.getStatus(analysisRequestId);
+    console.log(status);
+    switch(status) {
+        case 'READY':
+            res.send(await getResults(analysisRequestId));
+            break;
+        case 'FAILURE':
+            res.status(500).send({ message: 'Sentiment analysis failed' });
+            break;
+        default:
+            res.send({ pending: true });
+            break;
+    }
 });
 
 app.listen(port, () => {

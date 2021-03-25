@@ -1,9 +1,8 @@
 const fetch = require('node-fetch');
 const FormData = require('form-data');
 
-const analyzeSentiment = require('../helper/analyzeSentiment');
+const sentimentEngine = require('../sentimentEngine');
 const config = require('../../config');
-const computeDataPoint = require('../helper/computeDataPoint');
 const authRequestParams = {
     method: 'POST',
     headers: {
@@ -43,27 +42,25 @@ async function search(query, options) {
     return data.json();
 }
 
-async function scoreWeek(query, dates) {
+async function scoreWeek(analysisRequestId, query, dates) {
     const searchPromise = search(query, {
         limit: 70,
         t: 'week'
     });
-    const scoresByDate = {};
-    for(const date of dates) {
-        scoresByDate[date] = [];
-    }
+    const dateSet = new Set(dates);
+    const postsForEngine = [];
     const posts = await searchPromise;
     for(const post of posts.data.children) {
         const date = new Date(post.data.created * 1000).toISOString().substring(0, 10);
-        if(scoresByDate[date] !== undefined) {
-            scoresByDate[date].push(analyzeSentiment(post.data.selftext));
+        if(dateSet.has(date)) {
+            postsForEngine.push({
+                created_at: date,
+                text: post.data.selftext
+            });
         }
     }
-    const scores = [];
-    for(const date of dates) {
-        scores.push(computeDataPoint(await Promise.all(scoresByDate[date])))
-    }
-    return scores;
+    await sentimentEngine.analyzePosts(analysisRequestId, 'reddit', postsForEngine);
+    await sentimentEngine.allPostsSent(analysisRequestId, 'reddit');
 }
 
 module.exports = { search, scoreWeek };

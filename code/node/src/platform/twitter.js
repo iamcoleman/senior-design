@@ -1,8 +1,7 @@
 const fetch = require('node-fetch');
 
-const analyzeSentiment = require('../helper/analyzeSentiment');
+const sentimentEngine = require('../sentimentEngine');
 const config = require('../../config');
-const computeDataPoint = require('../helper/computeDataPoint');
 const { bearerToken } = config.twitter;
 
 const requestParams = {
@@ -26,7 +25,7 @@ async function search(query, options = {}) {
     return data.json();
 }
 
-async function scoreDate(query, date, dayAfter) {
+async function scoreDate(analysisRequestId, query, date, dayAfter) {
     const options = {
         count: 10
     };
@@ -34,34 +33,33 @@ async function scoreDate(query, date, dayAfter) {
         options.until = dayAfter;
     }
     const posts = await search(query, options);
-    const scorePromises = [];
+    const postsForEngine = [];
     const hashtags = new Set();
     for(let status of posts.statuses) {
         const postDate = new Date(status.created_at).toISOString().substring(0, 10);
         if(postDate !== date) {
             break;
         }
-        scorePromises.push(analyzeSentiment(status.text));
+        postsForEngine.push({
+            created_at: date,
+            text: status.text.replace(/\shttps?:\/\/\S+$/, '')
+        });
         for(tag of status.entities.hashtags) {
             hashtags.add(tag.text);
         }
     }
 
-    const dataPoint = computeDataPoint(await Promise.all(scorePromises));
-    return { dataPoint, hashtags };
+    const analysisPromise = sentimentEngine.analyzePosts(analysisRequestId, 'tweets', postsForEngine);
+    return { hashtags, analysisPromise };
 }
 
-async function scoreWeek(query, dates) {
-    const scorePromises = [];
-    for(let i = 0; i < 7; i++) {
-        scorePromises.push(scoreDate(query, dates[i], dates[i + 1]));
-    }
-    const scores = [];
+async function scoreWeek(analysisRequestId, query, dates) {
+    const analysisPromises = [];
     const lowercaseHashtags = new Set();
     const hashtags = [];
-    for(const scorePromise of scorePromises) {
-        const result = await scorePromise;
-        scores.push(result.dataPoint);
+    for(let i = 0; i < 7; i++) {
+        const result = await scoreDate(analysisRequestId, query, dates[i], dates[i + 1]);
+        analysisPromises.push(result.analysisPromises);
         for(const tag of result.hashtags) {
             const lowerText = tag.toLowerCase();
             if(!lowercaseHashtags.has(lowerText)) {
@@ -70,7 +68,8 @@ async function scoreWeek(query, dates) {
             }
         }
     }
-    return { scores, hashtags };
+    Promise.all(analysisPromises).then(() => sentimentEngine.allPostsSent(analysisRequestId, 'tweets'));
+    return hashtags
 }
 
 module.exports = { search, scoreWeek };

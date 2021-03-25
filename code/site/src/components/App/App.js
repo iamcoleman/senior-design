@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import searchQuery from '../../api/searchQuery';
 import SentimentChart from '../SentimentChart/SentimentChart';
 import TagDisplay from '../TagDisplay/TagDisplay';
 import './App.css';
@@ -12,7 +13,7 @@ function App() {
 
   const search = async (searchText) => {
     setLoading(true);
-    setData(await (await fetch(`/api/sentiment/query/${encodeURIComponent(searchText)}`)).json());
+    setData(await searchQuery(searchText));
     setSearched(searchText);
     setLoading(false);
   }
@@ -53,8 +54,8 @@ function App() {
             }
             score += inputPoint.score * inputPoint.count;
             count += inputPoint.count;
-            lowTotal += inputPoint.lowAverage * inputPoint.count;
-            highTotal += inputPoint.highAverage * inputPoint.count;
+            lowTotal += inputPoint.lowerQuartile * inputPoint.count;
+            highTotal += inputPoint.upperQuartile * inputPoint.count;
           }
           if(count === 0) {
             dataset.push({ count });
@@ -62,8 +63,8 @@ function App() {
             dataset.push({
               score: score / count,
               count,
-              lowAverage: lowTotal / count,
-              highAverage: highTotal / count
+              lowerQuartile: lowTotal / count,
+              upperQuartile: highTotal / count
             });
           }
         }
@@ -93,9 +94,9 @@ function App() {
           <TagDisplay hashtags={data.hashtags} searchTag={searchTag} />
           <select value={display} onChange={(e) => setDisplay(e.target.value)}>
             <option value="all">All</option>
-            <option value="average">Average</option>
-            {datasetNames.map((datasetName) => (
-              <option value={datasetName}>
+            {/* <option value="average">Average</option> */}
+            {datasetNames.map((datasetName, i) => (
+              <option value={datasetName} key={i}>
                 {datasetName.charAt(0).toUpperCase()}
                 {datasetName.slice(1)}
               </option>))}
