@@ -18,8 +18,5 @@ export default async (query) => {
     });
     const { analysisRequestId, hashtags } = await analysisStartResponse.json();
     const { scores, dates } = await new Promise((resolve, reject) => getResults(analysisRequestId, resolve, reject));
-    if(query.charAt(0) !== '#') {
-        delete scores.tumblr;
-    }
     return { hashtags, scores, dates };
 }

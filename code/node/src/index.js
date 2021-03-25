@@ -41,19 +41,23 @@ const platforms = ['twitter', 'reddit', 'tumblr'];
 async function getResults(analysisRequestId) {
     const results = await sentimentEngine.getResults(analysisRequestId);
     results.sort((a, b) => a.result_day.localeCompare(b.result_day));
-    const dates = [];
+    const dates = results.map((result) => result.result_day);
     const scores = {};
     for(const platform of platforms) {
-        scores[platform] = [];
-    }
-    for(const result of results) {
-        dates.push(result.result_day);
-        for(const platform of platforms) {
-            scores[platform].push({
+        let platformHasResults = false;
+        const platformScores = results.map((result) => {
+            if(result[`${platform}_median`] == null) {
+                return {};
+            }
+            platformHasResults = true;
+            return {
                 score: result[`${platform}_median`] * 100,
                 lowerQuartile: result[`${platform}_lower_quartile`] * 100,
                 upperQuartile: result[`${platform}_upper_quartile`] * 100
-            });
+            };
+        });
+        if(platformHasResults) {
+            scores[platform] = platformScores;
         }
     }
     return { dates, scores };
