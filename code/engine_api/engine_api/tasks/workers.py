@@ -105,8 +105,8 @@ def perform_twitter_analysis(analysis_request_id):
         # get the result values
         median = np.median(positive_values)
         average = np.average(positive_values)
-        upper_quartile = np.percentile(positive_values, 75)
-        lower_quartile = np.percentile(positive_values, 25)
+        upper_quartile = np.percentile(positive_values, 60)  # named quartile even though it's 60/100
+        lower_quartile = np.percentile(positive_values, 40)  # named quartile even though it's 40/100
         min_value = min(positive_values)
         max_value = max(positive_values)
         analysis_values = {
@@ -181,8 +181,8 @@ def perform_reddit_analysis(analysis_request_id):
         # get the result values
         median = np.median(positive_values)
         average = np.average(positive_values)
-        upper_quartile = np.percentile(positive_values, 75)
-        lower_quartile = np.percentile(positive_values, 25)
+        upper_quartile = np.percentile(positive_values, 60)  # named quartile even though it's 60/100
+        lower_quartile = np.percentile(positive_values, 40)  # named quartile even though it's 40/100
         min_value = min(positive_values)
         max_value = max(positive_values)
         analysis_values = {
@@ -257,8 +257,8 @@ def perform_tumblr_analysis(analysis_request_id):
         # get the result values
         median = np.median(positive_values)
         average = np.average(positive_values)
-        upper_quartile = np.percentile(positive_values, 75)
-        lower_quartile = np.percentile(positive_values, 25)
+        upper_quartile = np.percentile(positive_values, 60)  # named quartile even though it's 60/100
+        lower_quartile = np.percentile(positive_values, 40)  # named quartile even though it's 40/100
         min_value = min(positive_values)
         max_value = max(positive_values)
         analysis_values = {
