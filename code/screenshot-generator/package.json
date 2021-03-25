@@ -1,0 +1,13 @@
+{
+  "name": "screenshot-generator",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "canvas": "^2.7.0",
+    "canvas2svg": "^1.0.16",
+    "chart.js": "^2.9.4",
+    "jsdom": "^16.5.1",
+    "xmlserializer": "^0.6.1"
+  }
+}
