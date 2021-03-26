@@ -1,17 +1,16 @@
 html {
     background-color: grey;
+    width: 48in;
+    height: 36in;
 }
 
 body {
     background-color: white;
     margin: 0;
     font-family: 'Segoe UI';
-    padding: 1in;
-}
-
-html, body {
-    width: 48in;
-    height: 36in;
+    padding: 0.5in;
+    width: 47in;
+    height: 35in;
 }
 
 header {
@@ -21,7 +20,7 @@ header {
 
 h1 {
     font-size: 1.8in;
-    margin: 0 0 1.2in 0;
+    margin: 0 0 0.8in 0;
     text-align: center;
 }
 
@@ -72,7 +71,7 @@ main {
 
 .topic {
     border: 0.05in solid #186e6e;
-    margin: 0.5in 0 0.8in 0;
+    margin: 0.5in 0;
     border-radius: 0.3in;
     overflow: hidden;
 }
