@@ -1,0 +1,9 @@
+{
+  "name": "poster",
+  "version": "1.0.0",
+  "description": "Simple program to generate a pdf of the poster",
+  "main": "generatePdf.js",
+  "dependencies": {
+    "puppeteer": "^8.0.0"
+  }
+}

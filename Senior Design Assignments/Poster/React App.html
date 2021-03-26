@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <link rel="icon" href="http://localhost:3000/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#000000">
+    <meta name="description" content="Web site created using create-react-app">
+    <link rel="apple-touch-icon" href="http://localhost:3000/logo192.png">
+    <!--
+      manifest.json provides metadata used when your web app is installed on a
+      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
+    -->
+    <link rel="manifest" href="http://localhost:3000/manifest.json">
+    <!--
+      Notice the use of  in the tags above.
+      It will be replaced with the URL of the `public` folder during the build.
+      Only files inside the `public` folder can be referenced from the HTML.
+
+      Unlike "/favicon.ico" or "favicon.ico", "/favicon.ico" will
+      work correctly both with client-side routing and a non-root public URL.
+      Learn how to configure a non-root public URL by running `npm run build`.
+    -->
+    <title>React App</title>
+  <style>body {
+
+  margin: 0;
+
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+
+    sans-serif;
+
+  -webkit-font-smoothing: antialiased;
+
+  -moz-osx-font-smoothing: grayscale;
+
+}
+
+
+
+code {
+
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+
+    monospace;
+
+}
+
+
+/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly9zcmMvaW5kZXguY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0VBQ0UsU0FBUztFQUNUOztjQUVZO0VBQ1osbUNBQW1DO0VBQ25DLGtDQUFrQztBQUNwQzs7QUFFQTtFQUNFO2FBQ1c7QUFDYiIsInNvdXJjZXNDb250ZW50IjpbImJvZHkge1xyXG4gIG1hcmdpbjogMDtcclxuICBmb250LWZhbWlseTogLWFwcGxlLXN5c3RlbSwgQmxpbmtNYWNTeXN0ZW1Gb250LCAnU2Vnb2UgVUknLCAnUm9ib3RvJywgJ094eWdlbicsXHJcbiAgICAnVWJ1bnR1JywgJ0NhbnRhcmVsbCcsICdGaXJhIFNhbnMnLCAnRHJvaWQgU2FucycsICdIZWx2ZXRpY2EgTmV1ZScsXHJcbiAgICBzYW5zLXNlcmlmO1xyXG4gIC13ZWJraXQtZm9udC1zbW9vdGhpbmc6IGFudGlhbGlhc2VkO1xyXG4gIC1tb3otb3N4LWZvbnQtc21vb3RoaW5nOiBncmF5c2NhbGU7XHJcbn1cclxuXHJcbmNvZGUge1xyXG4gIGZvbnQtZmFtaWx5OiBzb3VyY2UtY29kZS1wcm8sIE1lbmxvLCBNb25hY28sIENvbnNvbGFzLCAnQ291cmllciBOZXcnLFxyXG4gICAgbW9ub3NwYWNlO1xyXG59XHJcbiJdLCJzb3VyY2VSb290IjoiIn0= */</style><style>.chart {
+
+  margin-left: calc(50% - 500px);
+
+}
+
+
+/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly9zcmMvY29tcG9uZW50cy9TZW50aW1lbnRDaGFydC9TZW50aW1lbnRDaGFydC5jc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7RUFDRSw4QkFBOEI7QUFDaEMiLCJzb3VyY2VzQ29udGVudCI6WyIuY2hhcnQge1xyXG4gIG1hcmdpbi1sZWZ0OiBjYWxjKDUwJSAtIDUwMHB4KTtcclxufVxyXG4iXSwic291cmNlUm9vdCI6IiJ9 */</style><style>.tagDisplay {
+
+text-align: center;
+
+max-width: 50rem;
+
+margin-left: calc(50% - 25rem);
+
+}
+
+
+
+.tagDisplay button {
+
+background: none;
+
+border: none;
+
+padding: 0;
+
+color: #069;
+
+text-decoration: underline;
+
+cursor: pointer;
+
+}
+
+
+/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly9zcmMvY29tcG9uZW50cy9UYWdEaXNwbGF5L1RhZ0Rpc3BsYXkuY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0FBQ0Esa0JBQWtCO0FBQ2xCLGdCQUFnQjtBQUNoQiw4QkFBOEI7QUFDOUI7O0FBRUE7QUFDQSxnQkFBZ0I7QUFDaEIsWUFBWTtBQUNaLFVBQVU7QUFDVixXQUFXO0FBQ1gsMEJBQTBCO0FBQzFCLGVBQWU7QUFDZiIsInNvdXJjZXNDb250ZW50IjpbIi50YWdEaXNwbGF5IHtcclxudGV4dC1hbGlnbjogY2VudGVyO1xyXG5tYXgtd2lkdGg6IDUwcmVtO1xyXG5tYXJnaW4tbGVmdDogY2FsYyg1MCUgLSAyNXJlbSk7XHJcbn1cclxuXHJcbi50YWdEaXNwbGF5IGJ1dHRvbiB7XHJcbmJhY2tncm91bmQ6IG5vbmU7XHJcbmJvcmRlcjogbm9uZTtcclxucGFkZGluZzogMDtcclxuY29sb3I6ICMwNjk7XHJcbnRleHQtZGVjb3JhdGlvbjogdW5kZXJsaW5lO1xyXG5jdXJzb3I6IHBvaW50ZXI7XHJcbn1cclxuIl0sInNvdXJjZVJvb3QiOiIifQ== */</style><style>main {
+
+  text-align: center;
+
+}
+
+
+
+.title {
+
+  text-align: center;
+
+}
+
+
+
+.searchForm {
+
+  text-align: center;
+
+  margin-bottom: 2rem;
+
+}
+
+
+
+.searchField {
+
+  width: 40rem;
+
+  height: 2rem;
+
+  border-radius: 3px;
+
+  border: 1px solid #aaa;
+
+}
+
+
+
+.searchButton {
+
+  width: 5rem;
+
+  height: 2rem;
+
+  margin-left: 0.5rem;
+
+  border-radius: 3px;
+
+  border: none;
+
+  background-color: rgb(75,162,162);
+
+  color: white;
+
+  font-size: 1rem;
+
+}
+
+
+/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly9zcmMvY29tcG9uZW50cy9BcHAvQXBwLmNzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtFQUNFLGtCQUFrQjtBQUNwQjs7QUFFQTtFQUNFLGtCQUFrQjtBQUNwQjs7QUFFQTtFQUNFLGtCQUFrQjtFQUNsQixtQkFBbUI7QUFDckI7O0FBRUE7RUFDRSxZQUFZO0VBQ1osWUFBWTtFQUNaLGtCQUFrQjtFQUNsQixzQkFBc0I7QUFDeEI7O0FBRUE7RUFDRSxXQUFXO0VBQ1gsWUFBWTtFQUNaLG1CQUFtQjtFQUNuQixrQkFBa0I7RUFDbEIsWUFBWTtFQUNaLGlDQUFpQztFQUNqQyxZQUFZO0VBQ1osZUFBZTtBQUNqQiIsInNvdXJjZXNDb250ZW50IjpbIm1haW4ge1xyXG4gIHRleHQtYWxpZ246IGNlbnRlcjtcclxufVxyXG5cclxuLnRpdGxlIHtcclxuICB0ZXh0LWFsaWduOiBjZW50ZXI7XHJcbn1cclxuXHJcbi5zZWFyY2hGb3JtIHtcclxuICB0ZXh0LWFsaWduOiBjZW50ZXI7XHJcbiAgbWFyZ2luLWJvdHRvbTogMnJlbTtcclxufVxyXG5cclxuLnNlYXJjaEZpZWxkIHtcclxuICB3aWR0aDogNDByZW07XHJcbiAgaGVpZ2h0OiAycmVtO1xyXG4gIGJvcmRlci1yYWRpdXM6IDNweDtcclxuICBib3JkZXI6IDFweCBzb2xpZCAjYWFhO1xyXG59XHJcblxyXG4uc2VhcmNoQnV0dG9uIHtcclxuICB3aWR0aDogNXJlbTtcclxuICBoZWlnaHQ6IDJyZW07XHJcbiAgbWFyZ2luLWxlZnQ6IDAuNXJlbTtcclxuICBib3JkZXItcmFkaXVzOiAzcHg7XHJcbiAgYm9yZGVyOiBub25lO1xyXG4gIGJhY2tncm91bmQtY29sb3I6IHJnYig3NSwxNjIsMTYyKTtcclxuICBjb2xvcjogd2hpdGU7XHJcbiAgZm9udC1zaXplOiAxcmVtO1xyXG59XHJcbiJdLCJzb3VyY2VSb290IjoiIn0= */</style><style type="text/css">/* Chart.js */
+/*
+
+ * DOM element rendering detection
+
+ * https://davidwalsh.name/detect-node-insertion
+
+ */
+
+@keyframes chartjs-render-animation {
+
+	from { opacity: 0.99; }
+
+	to { opacity: 1; }
+
+}
+
+
+
+.chartjs-render-monitor {
+
+	animation: chartjs-render-animation 0.001s;
+
+}
+
+
+
+/*
+
+ * DOM element resizing detection
+
+ * https://github.com/marcj/css-element-queries
+
+ */
+
+.chartjs-size-monitor,
+
+.chartjs-size-monitor-expand,
+
+.chartjs-size-monitor-shrink {
+
+	position: absolute;
+
+	direction: ltr;
+
+	left: 0;
+
+	top: 0;
+
+	right: 0;
+
+	bottom: 0;
+
+	overflow: hidden;
+
+	pointer-events: none;
+
+	visibility: hidden;
+
+	z-index: -1;
+
+}
+
+
+
+.chartjs-size-monitor-expand > div {
+
+	position: absolute;
+
+	width: 1000000px;
+
+	height: 1000000px;
+
+	left: 0;
+
+	top: 0;
+
+}
+
+
+
+.chartjs-size-monitor-shrink > div {
+
+	position: absolute;
+
+	width: 200%;
+
+	height: 200%;
+
+	left: 0;
+
+	top: 0;
+
+}
+
+</style></head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"><main><h1 class="title">Sentiment Analysis</h1><form class="searchForm"><input class="searchField" type="text" value="#cats"><button class="searchButton" type="submit">Search</button></form><p class="tagDisplay">Related hashtags: <button>#Adoptaversery</button>, <button>#CatsOfTwitter</button>, <button>#Caturday</button>, <button>#Cats</button>, <button>#Florida</button>, <button>...show more</button></p><select><option value="all" selected="selected">All</option><option value="twitter">Twitter</option><option value="reddit">Reddit</option><option value="tumblr">Tumblr</option></select><div class="chart"><image height="625" width="1250" style="display: block; height: 500px; width: 1000px;" src="chart.svg" /></div></main></div>
+    <!--
+      This HTML file is a template.
+      If you open it directly in the browser, you will see an empty page.
+
+      You can add webfonts, meta tags, or analytics to this file.
+      The build step will place the bundled scripts into the <body> tag.
+
+      To begin the development, run `npm start` or `yarn start`.
+      To create a production bundle, use `npm run build` or `yarn build`.
+    -->
+</body></html>
