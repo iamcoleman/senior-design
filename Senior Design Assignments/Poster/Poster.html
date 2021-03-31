@@ -10,16 +10,6 @@
         <main>
             <section class="topic-group">
                 <article class="topic">
-                    <h3>Background</h3>
-                    <p>
-                        There are plenty of tools that allow users to assess the amount of interest in a topic
-                        over time but provide no insight as to how people feel about that topic. To Google
-                        Trends, there is no difference between a spike of excitement and a spike of anger. As
-                        a consumer, brand manager, or investor, gauging sentiment can be as important as
-                        gauging interest, so this is a crucial lack of information.
-                    </p>
-                </article>
-                <article class="topic">
                     <h3>Our Platform</h3>
                     <p>
                         This project is a sentiment analysis and aggregation web application. Users can search
@@ -31,16 +21,28 @@
                     </p>
                 </article>
                 <article class="topic">
-                    <h3>Technologies</h3>
-                    <section class="logos">
-                        <img class="logo" src="images/logos/react.png" />
-                        <img class="logo" src="images/logos/chartjs.png" />
-                        <img class="logo" src="images/logos/node.png" />
-                        <img class="logo" src="images/logos/express.png" />
-                        <img class="logo" src="images/logos/python.png" />
-                        <img class="logo" src="images/logos/flask.png" />
-                        <img class="logo" src="images/logos/tensorflow.png" />
-                    </section>
+                    <h3>Background</h3>
+                    <p>
+                        Currently, there are many existing solutions to perform Sentiment Analysis to
+                        differentiate between positive and negative text. For this project, the goal was
+                        to utilize Natural Language Processing to create our own engine that will determine
+                        the overall sentiment trend of keywords across a variety of social media. This tool
+                        can then be utilized to provide further insight into decision making for marketing
+                        executives and others in that respective industry.
+                    </p>
+                </article>
+                <article class="topic">
+                    <h3>Sentiment Analysis</h3>
+                    <p>
+                        The methodology of the Sentiment Analysis engine used in this project is based on
+                        a very large pre-classified dataset and a BiLSTM neural network. Many different
+                        options were tested in this context, such as basic word scoring, Naive Bayes,
+                        Logistic Regression, and multiple types of neural networks. By incorporating the
+                        Universal Sentence Encoder from Google to create embeddings, the BiLSTM was able
+                        to be trained using the Sent140 dataset from Stanford, a dataset containing over
+                        1.6 million text objects. The final classification rate for the test data was over
+                        80% for the 100,000 records tested.
+                    </p>
                 </article>
             </section>
             <section class="topic-group">
@@ -64,23 +66,35 @@
                     <figcaption>A screenshot of the tool in action</figcaption>
                 </figure>
                 <article class="topic">
-                    <h3>Technical Design</h3>
-                    <p>
-                        The React web interface handles user interaction and formats the data on the fly based
-                        on the user's selections. The Node routing server manages communication between the web
-                        interface, social media platforms, and the sentiment analysis engine, concurrently
-                        making requests to different servers to minimize delay. The Python engine API receives
-                        all of the social media data, schedules it for analysis by the sentiment analysis engine,
-                        and aggregates the results. The Python sentiment analysis engine interprets the sentiment
-                        of social media posts and generates a score for each one based on how positive or negative
-                        it is.
-                    </p>
+                    <h3>Design Diagram</h3>
+                    <img src="images/design-D2.svg" class="design-diagram" />
                 </article>
             </section>
             <section class="topic-group">
                 <article class="topic">
-                    <h3>Design Diagram</h3>
-                    <img src="images/design-D2.svg" class="design-diagram" />
+                    <h3>Technologies</h3>
+                    <section class="logos">
+                        <img class="logo" src="images/logos/react.png" />
+                        <img class="logo" src="images/logos/node.png" />
+                        <img class="logo" src="images/logos/python.png" />
+                        <img class="logo" src="images/logos/flask.png" />
+                        <img class="logo" src="images/logos/tensorflow.png" />
+                    </section>
+                </article>
+                <article class="topic">
+                    <h3>Technical Design</h3>
+                    <ul>
+                        <li>The React site displays the data based on the user's selections.</li>
+                        <li>The Node server manages communication throughout the application.</li>
+                        <li>
+                            The Python engine API prepares and schedules the sentiment analysis
+                            and aggregates the results.
+                        </li>
+                        <li>
+                            The Python sentiment engine assesses the positivity or negativity
+                            of social media posts.
+                        </li>
+                    </ul>
                 </article>
                 <article class="topic">
                     <h3>Achievements</h3>
@@ -94,9 +108,8 @@
                             standalone without the need for a frontend
                         </li>
                         <li>
-                            Successfully utilized Googles Universal Sentence Encoder along with a Recurrent Neural
-                            Network to build a classifier with nearly 80% sentiment accuracy. Classifier was trained
-                            using 1.6 million record data set
+                            Implemented Googles Universal Sentence Encoder along with a Recurrent Neural
+                            Network to build a classifier with nearly 80% sentiment accuracy
                         </li>
                     </ul>
                 </article>
@@ -106,14 +119,6 @@
                         <li>
                             Create a customizable date range for the sentiment graph. This will allow users to
                             view trends over a longer period of time.
-                        </li>
-                        <li>
-                            Show users more statistical analysis of the sentiment data. This will help differentiate
-                            between a change in sentiment and statistical noise.
-                        </li>
-                        <li>
-                            Add a homepage with popular search results pre-populated. This will engage users and
-                            show them how others are using the platform.
                         </li>
                         <li>
                             Implement targeted sentiment analysis. This will enable our engine to assess the

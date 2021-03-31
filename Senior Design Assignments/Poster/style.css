@@ -28,7 +28,7 @@ h1 {
     display: flex;
     flex-direction: row;
     justify-content: center;
-    margin: 1in 0.5in 0.5in 0.5in;
+    margin: 0.3in 0.5in 0.3in 0.5in;
 }
 
 .author {
@@ -97,7 +97,7 @@ main {
 }
 
 .screenshot {
-    margin: 0.5in 0;
+    margin: 0.1in 0;
 }
 
 .screenshot > img {
@@ -114,7 +114,7 @@ main {
 
 .logo {
     margin: 0.2in 0.5in;
-    width: 5in;
+    width: 3in;
 }
 
 .design-diagram {
