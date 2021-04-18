@@ -38,6 +38,8 @@ There is a search bar at the top, and users can search for a topic or a hashtag.
 
 [Check out our Wiki](https://github.com/iamcoleman/senior-design/wiki)
 
+![A screenshot of our wiki](wiki.svg)
+
 ## Spring Final PPT Presentation
 
 Click to view the slideshow:
