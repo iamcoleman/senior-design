@@ -175,7 +175,7 @@ However, towards the end of my work, we realized that there was a major bottlene
 
 ### Tim
 
-| *Task* | *Hours* |
+| Task | Hours |
 | - | - |
 | Setting up Node server | 5 |
 | Integrating with Twitter API | 7 |
@@ -213,3 +213,13 @@ However, towards the end of my work, we realized that there was a major bottlene
 | Installing CUDA SDK for increased performance | 3 |
 | - | - |
 | *Total* | *101* |
+
+### Project Total
+
+| Team Member | Hours |
+| - | - |
+| Tim | 81 |
+| Jeet |  |
+| Coleman | 101 |
+| - | - |
+| *Total* | 182 |
