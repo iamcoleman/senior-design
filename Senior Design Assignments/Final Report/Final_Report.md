@@ -38,6 +38,8 @@ For the sentiment analysis classifier portion of this project, one of the focuse
 
 We tested the front end manually to ensure that everything behaved as expected. We compared the API response to the graph displayed, checking that the data was accurately represented. For the hashtag display, we compared the listed tags to the Twitter API response. And in terms of the interactivity, we ensured that there were no race conditions. We wanted all of the displayed data to be internally consistent, even though the information does not all come in at once. We also confirmed that it was not possible to cause an inconsistent state by searching repeatedly.
 
+The Engine API was tested using pytest as the base framework while using Flaskr to control the Flask endpoint tests. Every endpoint has its own individual test, and every database operation has its own individual test. These tests were ran every time an endpoint or database operation was changed to make sure that none of the functions broke. 
+
 ## User Manual
 
 [Check out our Wiki](https://github.com/iamcoleman/senior-design/wiki)
