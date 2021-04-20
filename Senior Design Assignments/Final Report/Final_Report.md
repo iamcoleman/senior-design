@@ -8,8 +8,7 @@ Table of contents:
 3. [Test Plan and Results](#test-plan-and-results)
 4. [User Manual](#user-manual)
 5. [Spring Final PPT Presentation](#spring-final-ppt-presentation)
-6. [Final Expo Presentation](#final-expo-presentation)
-7. [Final Expo Poster](#final-expo-poster)
+7. [Final Expo Poster + Presentation](#final-expo-poster)
 8. [Assessments](#assessments)
    1. [Tim Initial Assessment](#tim-initial-assessment)
    2. [Jeet Initial Assessment](#jeet-initial-assessment)
@@ -46,14 +45,14 @@ There is a search bar at the top, and users can search for a topic or a hashtag.
 Click to view the first semester slideshow:
 [![First slide of presentation](slide.svg)](https://docs.google.com/presentation/d/e/2PACX-1vSB2f5EmLQstvDX6cM-xhBO_IanveuJXXeG774muA54aI8dtPCy0KtDyA8qk8toqs74GH8hlmvUt5CB/pub?start=false&loop=false&delayms=60000)
 
+## Final Expo Poster
+
+![Our poster](Poster.svg)
+
 ## Final Expo Presentation
 
 Click to view the final video presentation:
 [![First slide of video](video-slide.svg)](https://drive.google.com/file/d/1Su3Yq4Rba4fsAbJfgN-FgTi4CQBxjAUy/view?usp=sharing)
-
-## Final Expo Poster
-
-![Our poster](Poster.svg)
 
 ## Assessments
 
