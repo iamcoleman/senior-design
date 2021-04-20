@@ -36,6 +36,8 @@ There is a search bar at the top, and users can search for a topic or a hashtag.
 
 For the sentiment analysis classifier portion of this project, one of the focuses was on the overall rate of classification. Our goal was to have it be at least 80% and we were able to achieve that. This metric was tested by splitting the dataset of 1.6 million objects into training and testing data. By using the testing data, the classifier was able to predict 81% of the labels correctly. This methodology was also used to determine the accuracy of other classifiers that were initially used in the project.
 
+We tested the front end manually to ensure that everything behaved as expected. We compared the API response to the graph displayed, checking that the data was accurately represented. For the hashtag display, we compared the listed tags to the Twitter API response. And in terms of the interactivity, we ensured that there were no race conditions. We wanted all of the displayed data to be internally consistent, even though the information does not all come in at once. We also confirmed that it was not possible to cause an inconsistent state by searching repeatedly.
+
 ## User Manual
 
 [Check out our Wiki](https://github.com/iamcoleman/senior-design/wiki)
