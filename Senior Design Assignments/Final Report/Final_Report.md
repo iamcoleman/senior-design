@@ -164,6 +164,11 @@ very happy with how the semester went and had a great experience with my group.
 
 ### Coleman Final  Assessment
 
+From our initial planning, the project was split up into three main sections: the frontend and Node.js server, the backend and Python Flask server, and the sentiment analysis scripts. Because I had previous experience with building out Flask APIs, I was assigned the backend and Flask server portion of the project. I was able to build out the Flask API and the Postgres database with relative ease because it was very similar to work I have done in previous co-ops and personal projects. Being able to grab bits and pieces of code from previous work really allowed me to speed up my development while maintaining a high level of code quality.
+
+However, towards the end of my work, we realized that there was a major bottleneck in the Flask API when it had to run multiple sentiment analysis requests at the same time – the requests were all running sequentially, which caused the entire API to slow to a crawl. I went on to do some additional research into projects similar to ours. I eventually found a Python library called Celery that could remove the bottleneck. Celery is a task scheduler, which means that it is able to create tasks (the sentiment analysis requests) that could be queued and ran in parallel with the Flask API when resources were available. Celery also allowed the application to become quite scalable. Whenever the Celery task queue begins to fill up with many tasks, it is as simple as spinning up a second Celery worker so the tasks can be split between them, thus cutting the time in half. I believe finding a solution to the bottleneck was my biggest obstacle, but finding the solution was also my greatest accomplishment and learning experience. This was the first time I had to add parallelization to a Python project. I was also very proud of the fact that I made an API that was highly scalable, thus making a product that is ready to be deployed in the real world. 
+
+
 ## Summary of Hours and Justification
 
 ### Tim
