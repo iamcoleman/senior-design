@@ -209,14 +209,21 @@ My last major task was integrating with the Python API that Coleman created. We 
 | Build initial basic classifier | 8 |
 | Create multiple versions of SA classifier | 16 |
 | Research Neural Networks | 5 |
+| Incorporate Google USE | 3 |
 | Implement Initial RNN| 4 |
 | Train Initial RNN | 6 |
-| Implement LSTM/BiLSTM | 15 |
+| Implement/Train LSTM/BiLSTM | 15 |
 | Exporting and Testing Models | 8 |
 | Develop Text Cleaning code | 5 |
 | Integrating with Node/API | 4 |
 | - | - |
-| *Total* | *86* |
+| *Total* | *89* |
+
+Due to myself and my group not having much knowledge of this area, a large portion of the initial months were spent learning more about both Natural Language Processing and Sentiment Analysis. Exploring different methodologies for this process and seeing existing work in the field as well. Our goal was not necessarily to beat the best classifier, but more to use that knowledge to create a consumer facing product.
+
+The first main step was to build the initial classifier using the polarity based functions in the NLTK library. This allowed us to see a basic level of what sentiment analysis could do, even though the accuracy was fairly low at around 66%. This was done using a very basic 300 item dataset with movie reviews. After this, the next step was to find a dataset that could help us find even more accurate answers. This was done by using Stanford's Sent140 Dataset of over 1.6 million pieces of text. Using this dataset, multiple classifers were built and tested to learn more about how we can analyze sentiment.
+
+The next step was to move toward Neural Networks, this was more of a learning experience because I hadn't worked at all in this area before.  In this area I prioritized learning about Recurrent Neural Networks and how to implement them. One of the biggest challenges was efficiently training the models. To take it a step further, the model was then implemented with BiLSTM along with Google's Universal Sentence Encoder. These models were then exported to allow for integration with the Node API. I then worked with Tim and Coleman to make sure the input data was properly preprocessed for the model and that it was working with the Node and Flask portions of the app. 
 
 ### Coleman
 
@@ -253,7 +260,7 @@ Finally, fully integrating with the Node server and the sentiment analysis scrip
 | Team Member | Hours |
 | - | - |
 | Tim | 81 |
-| Jeet | 86 |
+| Jeet | 89 |
 | Coleman | 111 |
 | - | - |
-| *Total* | *278* |
+| *Total* | *281* |
