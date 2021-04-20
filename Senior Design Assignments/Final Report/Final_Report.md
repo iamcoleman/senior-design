@@ -67,7 +67,54 @@ I am excited to work on this project because it broadens my horizons while capit
 We will likely start by building engines to read text and determine whether it matches keywords and what sentiment is behind it. We will then scale this out by integrating social media APIs to gather data and building an API to share the data. Then we will build a site that uses the API and aggregates the data. We are planning to use Python for the back end and React for the front end. The MVP will be a site where you can enter keywords and get a graph of public perception over time. Once this is done, we will continue to add features while time allows. I will self-evaluate based on how well the web interface is done, as this is the part of the project that I will likely be the most involved in. I will also evaluate how well I was able to adapt and learn the data science aspects of the project.
 
 ### Jeet Initial Assessment
+Hi my name is Jeet Shah, and in my senior year I will be working on a project regarding
+Natural Language Processing and social media alongside Coleman Lyski and Tim McCabe. We
+are focused on creating a website that will allow users to get a complete understanding of a
+keyword based on sentiment analysis done across social media and other sites. For example,
+we hope that someone can search for a sports team and see how people across the country
+feel about that given word. The key components of this project are Web Development and Data
+Science. For the site we will be using React/Javascript and for the backend it will be
+Flask/Python. I feel very prepared for a project like this through classes such as Info Retrieval
+and Intelligent Data Analysis. Natural Language Processing is a very important part of the
+innovation happening in today’s age and I am very much looking forward to working on this
+project.
 
+My college experience at the University of Cincinnati has gone a long way in helping me
+become the professional I am today. The classes that really helped me on the path to becoming
+a Data Scientist are Python Programming, Database Theory, and Intelligent Data Analysis.
+These classes gave me a lot of high level knowledge for when I interviewed for positions and
+when on the job as well. Python Programming was the first class where I felt really confident
+that I could program at a high level. Following that, Database Theory gave me a very strong
+level of exposure to SQL and databases in general. Ultimately, IDA was the class that gave me
+the knowledge of key algorithms and most importantly, when to use each algorithm. This was
+really important in my last two co-ops.
+
+I have had the chance to do five co-ops in my time at UC along with two part-time
+internships. From a cumulative perspective, this has given me over 90 weeks of work
+experience while I was in college. My first co-op was at GE Digital where I was a Digital Technology Intern and worked on Web Development using the Angular Framework. After this, I started working at Siemens PLM where my first rotation involved doing Back-End Development
+with Java, MongoDB, and NodeJS. In my third co-op, I returned to Siemens and had a more
+data engineering based role where I did natural language processing, machine learning, and
+some more web development projects. My fourth rotation was as a Data Science Intern at
+84.51, an analytics firm owned by Kroger where I worked on creating a visualization tool for food
+insecurity across the United States. I loved my time at 8451 and returned for another rotation
+where I worked as a Data Science Intern on the Fuel Analytics team. I became very skilled in
+Python and SQL in my last two rotations and I’ve ultimately accepted a full time role as a Data
+Scientist at 84.51.
+
+I am really excited to get started on this project because I feel like Natural Language
+Processing will be a really important skill to have in the future. Being able to comprehend text
+using algorithms can be utilized for many potential business ideas or even to help a company
+I’m working at. I hope to one day specialize in this area, especially if this project ends up being
+as enjoyable as I think it will be. I also feel very motivated to do well in this area because I think
+this will provide me with a lot more credibility in the analytics space. With people transitioning
+from phone calls to text, having a strong understanding of text communication will be critical.
+I have high expectations for myself and my group in this project. By the end of the year, I
+hope that we are able to have a highly functional website that can quickly provide sentiment
+based feedback on different terms a user may provide. As we move into the design phase, at a
+high level I see this being divided into a Web Dev and NLP project where React and Python can
+be used. By the end of this I will know if we did a good job based on overall team sentiment
+along with having a functional product. If we have time I hope to dive deeper into terms based
+on individual sports teams and maybe even country names.
 ### Coleman Initial Assessment
 
 ### Tim Final Assessment
