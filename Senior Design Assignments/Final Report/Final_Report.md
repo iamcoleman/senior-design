@@ -200,11 +200,12 @@ However, towards the end of my work, we realized that there was a major bottlene
 | Task | Hours |
 | - | - |
 | Research social media APIs | 5 |
-| Create base Flask application | 10 |
+| Create base Flask application | 12 |
 | Integrate SQLAlchemy into Flask | 5 |
 | Develop Postgres Database | 10 |
 | Develop Endpoints | 16 |
-| Writing Endpoint Documentation | 3 |
+| Writing Endpoint Documentation | 5 |
+| Refactoring/Optimizing Endpoints | 6 |
 | Creating Endpoint Tests | 8 |
 | Incorporating Celery Task Scheduler | 24 |
 | Optimizing Celery Task Scheduler | 8 |
@@ -212,7 +213,17 @@ However, towards the end of my work, we realized that there was a major bottlene
 | Integrating with Sentiment Analysis Scripts | 6 |
 | Installing CUDA SDK for increased performance | 3 |
 | - | - |
-| *Total* | *101* |
+| *Total* | *111* |
+
+The first portion of my work was focused on creating the base Flask application that would be the foundation of all my future work. This included researching Flask, structuring the Flask app factory, and registering the required extensions. This took roughly 17 hours of work total. 
+
+My next goal was setting up the PostgreSQL database with the correct schema. Designing the schema and then implementing it into the Flask app took roughly 10 hours total. This could have taken a lot longer, but luckily, I spent the time registering the SQLAlchemy extension with Flask in the previous step, which helped speed up the development of the database.
+
+Now that the Flask app and database are up and running, I moved on to developing the API endpoints. Creating the initial version of the endpoints took roughly two full workdays, or 16 hours. I then spent an additional five hours on writing Swagger documentation for the endpoints, so Tim knew exactly what to expect from the API. After integrating the Node sever with the endpoints, there was some obvious refactoring to do for optimization. This ended up taking about six hours. Finally, I spent roughly eight hours on writing tests for the endpoints to make sure that everything was running smoothly. 
+
+Probably the most difficult part of my work was incorporating the Celery Task Scheduler with the existing Flask app. If I knew we were going to be using Celery from the beginning, I believe this would have been a much easier process. Adding Celery to the project took about 32 hours total.
+
+Finally, fully integrating with the Node server and the sentiment analysis scripts took about 12 hours total.
 
 ### Project Total
 
@@ -220,6 +231,6 @@ However, towards the end of my work, we realized that there was a major bottlene
 | - | - |
 | Tim | 81 |
 | Jeet |  |
-| Coleman | 101 |
+| Coleman | 111 |
 | - | - |
-| *Total* | 182 |
+| *Total* | *192* |
