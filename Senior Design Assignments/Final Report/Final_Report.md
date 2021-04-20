@@ -193,6 +193,12 @@ However, towards the end of my work, we realized that there was a major bottlene
 | - | - |
 | *Total* | *81* |
 
+My first task was to create the routing server in Node.js. I integrated with the Twitter and Reddit APIs, and created a demo API that retrieved posts for the week from each platform. All of the requests had to be asynchronous and non-blocking when possible. After this, I set up the front end in React and integrated it with the Node.js API. I extracted each dataset from the API response and used it to construct the graph.
+
+Once this was complete, I adjusted the existing Node.js code to allow for hashtag searches through the Tumblr API. The Tumblr fetch had to be optional, as it only applied for hashtags, and it had to be non-blocking like the others when it was included. I also adjusted the front end to display the Tumblr data if it was retrieved.
+
+My last major task was integrating with the Python API that Coleman created. We worked together to develop the contract, then I integrated with each piece of the project as he developed it. Integrating with this API was considerably more complicated than the demo API that I had created, and so this ended up being the most time-consuming task that I faced.
+
 ### Jeet
 
 ### Coleman
