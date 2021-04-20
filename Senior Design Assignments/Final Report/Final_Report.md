@@ -173,7 +173,7 @@ However, towards the end of my work, we realized that there was a major bottlene
 
 ### Tim
 
-| Task | Hours |
+| *Task* | *Hours* |
 | - | - |
 | Setting up Node server | 5 |
 | Integrating with Twitter API | 7 |
@@ -188,7 +188,26 @@ However, towards the end of my work, we realized that there was a major bottlene
 | Adding percentile display | 8 |
 | Adding platform selection dropdown | 5 |
 | Adding related hashtags | 3 |
+| - | - |
+| *Total* | *81* |
 
 ### Jeet
 
 ### Coleman
+
+| Task | Hours |
+| - | - |
+| Research social media APIs | 5 |
+| Create base Flask application | 10 |
+| Integrate SQLAlchemy into Flask | 5 |
+| Develop Postgres Database | 10 |
+| Develop Endpoints | 16 |
+| Writing Endpoint Documentation | 3 |
+| Creating Endpoint Tests | 8 |
+| Incorporating Celery Task Scheduler | 24 |
+| Optimizing Celery Task Scheduler | 8 |
+| Integrating with Node server | 3 |
+| Integrating with Sentiment Analysis Scripts | 6 |
+| Installing CUDA SDK for increased performance | 3 |
+| - | - |
+| *Total* | *101* |
