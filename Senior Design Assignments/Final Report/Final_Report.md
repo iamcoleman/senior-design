@@ -201,6 +201,23 @@ My last major task was integrating with the Python API that Coleman created. We 
 
 ### Jeet
 
+| Task | Hours |
+| - | - |
+| Research NLP Libraries | 5 |
+| Research existing NLP methodologies | 5 |
+| Research possible datasets | 5 |
+| Build initial basic classifier | 8 |
+| Create multiple versions of SA classifier | 16 |
+| Research Neural Networks | 5 |
+| Implement Initial RNN| 4 |
+| Train Initial RNN | 6 |
+| Implement LSTM/BiLSTM | 15 |
+| Exporting and Testing Models | 8 |
+| Develop Text Cleaning code | 5 |
+| Integrating with Node/API | 4 |
+| - | - |
+| *Total* | *86* |
+
 ### Coleman
 
 | Task | Hours |
@@ -236,7 +253,7 @@ Finally, fully integrating with the Node server and the sentiment analysis scrip
 | Team Member | Hours |
 | - | - |
 | Tim | 81 |
-| Jeet |  |
+| Jeet | 86 |
 | Coleman | 111 |
 | - | - |
-| *Total* | *192* |
+| *Total* | *278* |
