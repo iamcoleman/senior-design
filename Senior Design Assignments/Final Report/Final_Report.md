@@ -76,6 +76,29 @@ Most of my work was related to the Node server and React front end. I created th
 I did not get as much of an opportunity as I had hoped to work on the sentiment analysis portion of the project. However, I worked on my web development experience, and this will help me in the future as a full-stack developer. By challenging myself to ensure that all of the requests and processing were asynchronous, I developed my ability to think in terms of concurrency and avoid race conditions.
 
 ### Jeet Final Assessment
+During the school year of 2020 - 2021, my group of Coleman Lyski, Tim McCabe, and I
+(Jeet Shah) worked on the Sentiment Analysis Tool for Senior Design. From a high level
+view, my contributions were focused on building the classifiers for sentiment analysis by
+using Natural Language Processing libraries and machine learning algorithms.
+Additionally, I tested multiple solutions for many variations of social media platforms to
+see where our Sentiment Analysis would fit in best. Outside of the technical
+contributions, I also played a large role in the building of our final powerpoint and video
+presentation, where I focused on the sentiment analysis portion of the project.
+
+From a learning standpoint, I would consider the past semester to be very successful
+when it comes to my knowledge of Natural Language Processing and sentiment
+analysis as a whole. I was able to dive deeper into Python and its respective libraries
+while also incorporating outside packages such as Google’s Universal Sentence
+Encoder. I had never worked with machine learning outside of class, so this was an
+amazing opportunity to apply that knowledge to the real world. This was my first time
+working with neural networks and I learned about recurrent neural networks and was
+able to learn more about LSTM and BiLSTM neural networks as well. In terms of
+obstacles, one of the main ones was the inability to work together in person. Even
+though Computer Science works well remote, the brainstorming and research phases
+would have been much smoother if we had been in-person. Additionally, another
+obstacle was my computer’s inability to process large amounts of data in a short period
+of time, so I had to write scripts to send to Coleman to train the classifiers. Overall, I am
+very happy with how the semester went and had a great experience with my group.
 
 ### Coleman Final  Assessment
 
